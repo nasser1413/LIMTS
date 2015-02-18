@@ -1,4 +1,3 @@
-<pre>
 <?php
 	// Import the "Grab Bag"
 	require("common.php");
@@ -76,10 +75,9 @@
 		array_push($filtered_sections, ValpoSection::new_from_db_row($conn, $section));
 	}
 
-	// Finally, echo the JSON produced by the sections
+	// Echo all of the classes as JSON
 	echo json_encode($filtered_sections);
-	
-	// and close the connection
-	$conn->close();	
+
+	// Finally, close the connection
+	$conn->close();
 ?>
-</pre>
