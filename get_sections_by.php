@@ -78,5 +78,9 @@
 
 	// Finally, echo the JSON produced by the sections
 	echo json_encode($filtered_sections);
+
+	
+	// and close the connection
+	$conn->close();	
 ?>
 </pre>
