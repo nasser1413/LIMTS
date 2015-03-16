@@ -17,7 +17,6 @@ $credit_hours = $_GET["credit_hours"];
 $contact_hours = $_GET["contact_hours"];
 $ascending = $_GET["ascending"];
 
-
 // Check to make sure the required information is present
 if (!($name && $title && $credit_hours && $contact_hours )) {
   die("You must specify the name,title,credit_hours,and contact_hours!");
