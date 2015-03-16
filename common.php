@@ -76,15 +76,26 @@
 		return $subject;
 	}
 
+	// Check a bunch o' parameters & make sure they ain't null
+	function check_parameters() {
+		$params = func_get_args();
+		foreach ($params as $param) {
+			if (!$param) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	class ValpoSection {
-		public $name; //
-		public $credit_hours; //
-		public $title; //
-		public $meeting_times; //
+		public $name;
+		public $credit_hours;
+		public $title;
+		public $meeting_times;
 		public $rooms;
-		public $semester; //
-		public $week_style; //
-		public $professor; //
+		public $semester;
+		public $week_style;
+		public $professor;
 		public $capacity;
 
 		public static function new_from_db_row($conn, $db_row) {
