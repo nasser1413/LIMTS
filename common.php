@@ -1,7 +1,7 @@
 <?php
 
 	/* File for common/shared functions, classes and global variables (A grab bag - this should be distributed!)
-	 * 
+	 *
 	 * Created by: Justin Szaday on Tues. Feb 17, 2014
 	 */
 
@@ -10,6 +10,15 @@
 	$dbuser = "scheduler";
 	$dbpass = "358dbpass";
 	$dbname = "test";
+
+	$day_abbreviations = array(	"U" => 1,
+															"M" => 2,
+															"T" => 3,
+															"W" => 4,
+															"R" => 5,
+															"F" => 6,
+															"S" => 7 );
+	$date_regex = "/([A-Z]+) *(\d+:\d+[ap])-(\d+:\d+[ap])/";
 
 	// Section Column information
 	define("SECTION_ID", 1);
@@ -31,15 +40,22 @@
 	define("CLASS_CRHR", 2);
 	define("CLASS_TITLE", 4);
 	// Semester Information
+	define("SEMESTER_ID", 0);
 	define("SEMESTER_NAME", 1);
+	define("SEMESTER_TYPE", 2);
+	define("SEMESTER_START", 3);
+	define("SEMESTER_END", 4);
 	// Building Information
 	define("BUILDING_ABRV", 2);
-	
+	// Semester Types
+	define("EVERY_WEEK", 1);
+	define("EVEN_WEEKS", 2);
+	define("ODD_WEEKS", 3);
 
 	// Get something of type $type with id $id
 	function get_x_with_id($conn, $type, $id) {
-		$result = $conn->query("SELECT * 
-					FROM  `$type` 
+		$result = $conn->query("SELECT *
+					FROM  `$type`
 					WHERE `id` =$id;");
 		$row = $result->fetch_row();
 		$result->close();
@@ -87,6 +103,23 @@
 		return true;
 	}
 
+	function parse_meeting_times($section) {
+		$parsed_times = array();
+		$meeting_times = json_decode($section[SECTION_TIMES]);
+		foreach ($meeting_times as $meeting_time) {
+			preg_match($GLOBALS["date_regex"], $meeting_time, $matches);
+			$days = $matches[1];
+			$start = strtotime($matches[2], 0);
+			$end = strtotime($matches[3], 0);
+			$range = array($start, $end);
+
+			for ($i = 0; $i < strlen($days); $i++) {
+				$parsed_times[$GLOBALS["day_abbreviations"][$days{$i}]] = $range;
+			}
+		}
+		return $parsed_times;
+	}
+
 	class ValpoSection {
 		public $name;
 		public $credit_hours;
@@ -103,7 +136,7 @@
 			$class = get_x_with_id($conn, "Class", $db_row[SECTION_CLASS]);
 			$professor = get_x_with_id($conn, "Professor", $db_row[SECTION_PROF]);
 			$semester = get_x_with_id($conn, "Semester", $db_row[SECTION_SEM]);
-		
+
 			$section->name = $class[CLASS_NAME] . "-" . $db_row[SECTION_ID];
 			$section->credit_hours = $class[CLASS_CRHR];
 			$section->title = $class[CLASS_TITLE];
@@ -117,7 +150,7 @@
 			$room_ids = json_decode($db_row[SECTION_ROOMS]);
 			foreach ($room_ids as $room_id) {
 				$room = get_x_with_id($conn, "Room", $room_id);
-				$building = get_x_with_id($conn, "Building", $room[ROOM_BLDG]);		
+				$building = get_x_with_id($conn, "Building", $room[ROOM_BLDG]);
 
 				if ($room[ROOM_CAP] < $smallest_cap) {
 					$smallest_cap = $room[ROOM_CAP];
@@ -130,7 +163,7 @@
 				$section->capacity = $db_row[SECTION_MCAP];
 			} else {
 				// Assign to smallest capacity
-				$section->capacity = $smallest_cap;		
+				$section->capacity = $smallest_cap;
 			}
 
 			return $section;
