@@ -62,8 +62,8 @@
           $event = array();
           $event["title"] = $name;
           $event["allDay"] = false;
-          $event["start"] = date(DATE_ATOM, $time + $meeting_times[$day][0]);
-          $event["end"] = date(DATE_ATOM, $time + $meeting_times[$day][1]);
+          $event["start"] = date(DATE_ATOM, strtotime("-1 day", $time + $meeting_times[$day][0]));
+          $event["end"] = date(DATE_ATOM, strtotime("-1 day", $time + $meeting_times[$day][1]));
           // Add the event to the list
           array_push($events, $event);
         }
