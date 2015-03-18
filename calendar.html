@@ -24,7 +24,13 @@
             center: 'title',
             right: 'month,agendaWeek,agendaDay'
           },
-          events: 'sections_feed.php'
+          events: 'sections_feed.php',
+          eventClick: function(calEvent, jsEvent, view) {
+            alert('Event: ' + calEvent.title);
+          },
+          eventRender: function(event, element) {
+            element.css('cursor', 'pointer');
+          }
       });
     });
   </script>
