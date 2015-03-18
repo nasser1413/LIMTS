@@ -50,7 +50,7 @@
     foreach ($sections as $section) {
       // Grab the relevant section information
       $meeting_times = parse_meeting_times($section);
-			$class = get_x_with_id($conn, "Class", $section[SECTION_CLASS]);
+      $class = get_x_with_id($conn, "Class", $section[SECTION_CLASS]);
       $name = $class[CLASS_NAME] . "-" . $section[SECTION_ID];
       // Loop through the time range
       for ($time = $semester[SEMESTER_START]; ($time <= $end) && ($time <= $semester[SEMESTER_END]); $time = strtotime("+1 day", $time)) {
@@ -62,8 +62,8 @@
           $event = array();
           $event["title"] = $name;
           $event["allDay"] = false;
-          $event["start"] = date(DATE_ATOM, strtotime("-1 day 1 hours", $time + $meeting_times[$day][0]));
-          $event["end"] = date(DATE_ATOM, strtotime("-1 day 1 hours", $time + $meeting_times[$day][1]));
+          $event["start"] = date(DATE_ATOM, strtotime("-1 day", $time + $meeting_times[$day][0]));
+          $event["end"] = date(DATE_ATOM, strtotime("-1 day", $time + $meeting_times[$day][1]));
           // Add the event to the list
           array_push($events, $event);
         }

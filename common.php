@@ -12,12 +12,12 @@
 	$dbname = "test";
 
 	$day_abbreviations = array(	"U" => 1,
-															"M" => 2,
-															"T" => 3,
-															"W" => 4,
-															"R" => 5,
-															"F" => 6,
-															"S" => 7 );
+					"M" => 2,
+					"T" => 3,
+					"W" => 4,
+					"R" => 5,
+					"F" => 6,
+					"S" => 7 );
 	$date_regex = "/([A-Z]+) *(\d+:\d+[ap])-(\d+:\d+[ap])/";
 
 	// Section Column information
@@ -109,8 +109,8 @@
 		foreach ($meeting_times as $meeting_time) {
 			preg_match($GLOBALS["date_regex"], $meeting_time, $matches);
 			$days = $matches[1];
-			$start = strtotime($matches[2], 0);
-			$end = strtotime($matches[3], 0);
+			$start = strtotime($matches[2] . "m", 0);
+			$end = strtotime($matches[3] . "m", 0);
 			$range = array($start, $end);
 
 			for ($i = 0; $i < strlen($days); $i++) {
