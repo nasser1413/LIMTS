@@ -25,8 +25,8 @@
             FROM `Semester`";
   $result = $conn->query($query);
   while ($row = $result->fetch_row()) {
-    $semester_start = strtotime($row[SEMESTER_START]);
-    $semester_end = strtotime($row[SEMESTER_END]);
+    $semester_start = strtotime("+1 day", strtotime($row[SEMESTER_START]));
+    $semester_end = strtotime("+1 day", strtotime($row[SEMESTER_END]));
     // If the semester is in the desired range add it to the list
     if ($semester_end >= $start) {
       array_push($semesters, array( SEMESTER_ID => $row[SEMESTER_ID],
@@ -53,7 +53,7 @@
 			$class = get_x_with_id($conn, "Class", $section[SECTION_CLASS]);
       $name = $class[CLASS_NAME] . "-" . $section[SECTION_ID];
       // Loop through the time range
-      for ($time = $semester[SEMESTER_START]; ($time < $end) && ($time < $semester[SEMESTER_END]); $time = strtotime("+1 day", $time)) {
+      for ($time = $semester[SEMESTER_START]; ($time <= $end) && ($time <= $semester[SEMESTER_END]); $time = strtotime("+1 day", $time)) {
         // Get the day of the week (numbered 1-7)
         $day = date("N", $time);
         // If we meet today then...
@@ -71,10 +71,10 @@
     }
   }
 
-	// Echo all of the classes as JSON
-	echo json_encode($events);
+  // Echo all of the classes as JSON
+  echo json_encode($events);
 
-	// Finally, close the connection
-	$conn->close();
+  // Finally, close the connection
+  $conn->close();
 
 ?>
