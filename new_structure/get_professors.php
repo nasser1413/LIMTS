@@ -10,23 +10,16 @@
 		die("Connection failed: " . $conn->connect_error);
 	}
 
-    $building = $_GET["building"];
-
-    if ($building == NULL) {
-        die("You must specify the building.");
-    }
-
 	$result = $conn->query("SELECT *
-			                FROM  `Room`
-                            WHERE `Building`=$building;");
-	$rooms = array();
+			                FROM  `Professor`;");
+	$professors = array();
 	while ($row = $result->fetch_row()) {
-		array_push($rooms, array("id" => $row[ROOM_ID], "nmbr" => $row[ROOM_NMBR]));
+		array_push($professors, array("id" => $row[PROFESSOR_ID], "name" => $row[PROFESSOR_NAME]));
 	}
     $result->close();
 
 	// Echo all of the classes as JSON
-	echo json_encode($rooms);
+	echo json_encode($professors);
 
 	// Finally, close the connection
 	$conn->close();

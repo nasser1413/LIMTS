@@ -30,16 +30,12 @@
 	define("SECTION_WEEKS", 7);
 	define("SECTION_MCAP", 8);
 	// Room Column information
-	define("ROOM_ID", 0);
 	define("ROOM_BLDG", 1);
 	define("ROOM_NMBR", 2);
 	define("ROOM_CAP", 3);
 	// Professor Information
-	define("PROFESSOR_ID", 0);
 	define("PROFESSOR_NAME", 1);
-	define("PROFESSOR_VID", 2);
 	// Class Information
-	define("CLASS_ID", 0);
 	define("CLASS_NAME", 1);
 	define("CLASS_CRHR", 2);
 	define("CLASS_TITLE", 4);
