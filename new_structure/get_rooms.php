@@ -21,7 +21,7 @@
                             WHERE `Building`=$building;");
 	$rooms = array();
 	while ($row = $result->fetch_row()) {
-		array_push($rooms, array("id" => $row[ROOM_ID], "nmbr" => $row[ROOM_NMBR]));
+		array_push($rooms, array("id" => $row[ROOM_ID], "nmbr" => $row[ROOM_NMBR], "cap" => $row[ROOM_CAP]));
 	}
     $result->close();
 

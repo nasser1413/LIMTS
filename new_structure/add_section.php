@@ -1,5 +1,22 @@
 <script type="text/javascript">
 
+    var modifiedCapacity = false;
+
+    function onFormSubmitted() {
+        $("#warningAlert1").offcanvas('show');
+    }
+
+    function onCapacityChanged() {
+        modifiedCapacity = true;
+    }
+
+    function onRoomSelected() {
+        var selectedCapacity = $("#roomName1 option:selected").attr("_cap");
+        if (!modifiedCapacity && selectedCapacity) {
+            $("#maxCapacity1").val(selectedCapacity);
+        }
+    }
+
     function onBuildingSelected() {
         var selectedBuilding = $("#buildingName1 option:selected").attr("_id");
 	    $.ajax({
@@ -13,9 +30,10 @@
                 roomSelect.empty();
 			    $.each(data, function(i, room) {
                     var id = room.id,
-                        nmbr = room.nmbr;
+                        nmbr = room.nmbr,
+                        capacity = room.cap;
                     roomSelect
-                        .append($("<option>", { "_id" : id })
+                        .append($("<option>", { _id : id, _cap : capacity })
                         .text(nmbr)); 
                 });
                 if (data.length !== 0) {
@@ -23,14 +41,18 @@
                 } else {
                     roomSelect.prop("disabled", true);
                 }
+
+                roomSelect.change(onRoomSelected);
+                onRoomSelected();
 		    }
 	    });
     }
 
     function loadSelector(type, handler) {
+       var url = "get_" + type + (type.endsWith("s") ? "es" : "s") + ".php";
        $.ajax({
 		    dataType: "json",
-		    url: "get_" + type + "s.php",
+		    url: url,
 		    success: function(data) {
 			    var selector = $("#" + type + "Name1");
 			    $.each(data, function(i, object) {
@@ -48,7 +70,7 @@
                 }
                 
                 if (handler) {
-                    selector.change(handler, selector);
+                    selector.change(handler);
                     handler(selector);
                 }
 		    }
@@ -58,15 +80,22 @@
     loadSelector("building", onBuildingSelected);
     loadSelector("semester");
     loadSelector("professor");
-    loadSelector("classe");
+    loadSelector("class");
 
+    $(function() {
+        $("#maxCapacity1").change(onCapacityChanged);
+    });
 </script>
 
+<div class="alert alert-danger alert-fixed-top offcanvas" id="warningAlert1">
+  <strong>Success!</strong> Your action has been completed succefully.
+</div>
+
 <h1>Add Section</h1>
-<form action="" method="POST">
+<form action="javascript:onFormSubmitted()">
     <div class="form-group">    
-    <label for="classeName1">Name:</label>
-    <select class="form-control" id="classeName1" name="classeName" disabled>
+    <label for="className1">Name:</label>
+    <select class="form-control" id="className1" name="className" disabled>
     </select>
     </div>
 
@@ -87,6 +116,7 @@
     <div class="form-group">
     <label for="maxCapacity1">Max Capacity:</label>
     <input type="text" class="form-control" id="maxCapacity1" name="maxCapacity">
+    <p class="help-block"><i>If left blank this will be populated based on the selected room(s)</i></p>
     </div>
 
     <div class="form-group"> 
@@ -106,11 +136,14 @@
                 </select>
             </div>
 
-            <div class="col-xs-7">
-                <input type="text" class="form-control" id="meetingTime1" name="meetingTime" placeholder="MWF 9:00a-9:50a">
-            </div>
-            <div class="col-xs-1">
-                <input type="button" id="delButton1" name="delButton" value="Delete" class="btn btn-default">
+            <div class="col-xs-8">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="meetingTime1" name="meetingTime" placeholder="MWF 9:00a-9:50a">
+                    <!-- <span class="input-group-btn"> -->
+                        <!-- <input type="button" id="delButton1" name="delButton" value="Delete" class="btn btn-default"> -->
+                        <span class="glyphicon glyphicon-remove input-group-addon" id="delButton1"></span>
+                    <!-- </span> -->
+                </div>
             </div>
         </div>    
     </div>
