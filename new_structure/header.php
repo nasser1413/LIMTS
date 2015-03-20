@@ -3,18 +3,16 @@
         <img src="assets/Signature_Horiz_Full_web.png" id="brand-img"/>   
     </a>
     <ul class="nav navmenu-nav">
-        <li class="active"><a href="?page=home">Home</a></li>
+        <li id="homeLink"><a href="?page=home">Home</a></li>
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Add <b class="caret"></b></a>
             <ul class="dropdown-menu navmenu-nav" role="menu">
-                <li><a href="?add=section">Section</a></li>
-                <li><a href="#">Another action</a></li>
-                <li><a href="#">Something else here</a></li>
-                <li><a href="#">Separated link</a></li>
-                <li><a href="#">One more separated link</a></li>
+                <li id="sectionLink"><a href="?add=section">Section</a></li>
+                <li><a href="#">Class</a></li>
+                <li><a href="#">Professor</a></li>
             </ul>
         </li>
-        <li><a href="?page=about">About</a></li>
+        <li id="aboutLink"><a href="?page=about">About</a></li>
     </ul>
     </nav>
     <div class="navbar navbar-default navbar-fixed-top">
@@ -24,3 +22,12 @@
             <span class="icon-bar"></span>
         </button>
     </div>
+
+    <script type="text/javascript">
+        $(function () {
+            var page = "<?php echo ($_GET["page"] ? $_GET["page"] : ($_GET["add"] ? $_GET["add"] : "home")) ?>";
+            var link = $("#" + page + "Link");
+            link.addClass("active");
+            link.parents(".dropdown").addClass("open");
+        });
+    </script>
