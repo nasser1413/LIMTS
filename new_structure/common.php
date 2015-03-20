@@ -21,6 +21,7 @@
 	$date_regex = "/([A-Z]+) *(\d+:\d+[ap])-(\d+:\d+[ap])/";
 
 	// Section Column information
+	define("SECTION_DBID", 0);
 	define("SECTION_ID", 1);
 	define("SECTION_ROOMS", 2);
 	define("SECTION_SEM", 3);
@@ -135,6 +136,7 @@
 		public $week_style;
 		public $professor;
 		public $capacity;
+        public $database_id;
 
 		public static function new_from_db_row($conn, $db_row) {
 			$section = new ValpoSection();
@@ -142,6 +144,7 @@
 			$professor = get_x_with_id($conn, "Professor", $db_row[SECTION_PROF]);
 			$semester = get_x_with_id($conn, "Semester", $db_row[SECTION_SEM]);
 
+            $section->database_id = $db_row[SECTION_DBID];
 			$section->name = $class[CLASS_NAME] . "-" . $db_row[SECTION_ID];
 			$section->credit_hours = $class[CLASS_CRHR];
 			$section->title = $class[CLASS_TITLE];

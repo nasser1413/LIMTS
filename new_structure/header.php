@@ -4,6 +4,7 @@
     </a>
     <ul class="nav navmenu-nav">
         <li id="homeLink"><a href="?page=home">Home</a></li>
+        <li id="tableLink"><a href="?page=table">Table View</a></li>
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Add <b class="caret"></b></a>
             <ul class="dropdown-menu navmenu-nav" role="menu">
