@@ -34,7 +34,7 @@
                         capacity = room.cap;
                     roomSelect
                         .append($("<option>", { _id : id, _cap : capacity })
-                        .text(nmbr)); 
+                        .text(nmbr));
                 });
                 if (data.length !== 0) {
                     roomSelect.prop("disabled", false);
@@ -49,7 +49,7 @@
     }
 
     function loadSelector(type, handler) {
-       var url = "get_" + type + (type.endsWith("s") ? "es" : "s") + ".php";
+       var url = "get_" + pluralize(type) + ".php";
        $.ajax({
 		    dataType: "json",
 		    url: url,
@@ -60,15 +60,15 @@
                         abbr = object.name ? object.name : object.abbr;
                     selector
                         .append($("<option>", { _id : id, _abbr : abbr})
-                        .text(abbr)); 
+                        .text(abbr));
                 });
-                
+
                 if (data.length !== 0) {
                     selector.prop("disabled", false);
                 } else {
                     selector.prop("disabled", true);
                 }
-                
+
                 if (handler) {
                     selector.change(handler);
                     handler(selector);
@@ -92,8 +92,8 @@
 </div>
 
 <h1>Add Section</h1>
-<form action="javascript:onFormSubmitted()">
-    <div class="form-group">    
+<form action="javascript:onFormSubmitted()" id="mainForm">
+    <div class="form-group">
     <label for="className1">Name:</label>
     <select class="form-control" id="className1" name="className" disabled>
     </select>
@@ -119,13 +119,16 @@
     <p class="help-block"><i>If left blank this will be populated based on the selected room(s)</i></p>
     </div>
 
-    <div class="form-group"> 
+    <div class="form-group">
     <label for="classIdentifier1">Identifier:</label>
     <input type="text" class="form-control" id="classIdentifier1" placeholder="A" name="classIdentifier">
     </div>
 
     <div class="form-group">
         <label for="meetingGroup1">Meeting Time:</label>
+        <button type="button" class="btn btn-default" style="float: right" id="addButton1" form="mainForm">
+            <span class="glyphicon glyphicon-plus"></span>
+        </button>
         <div class="row" id="meetingGroup1">
             <div class="col-xs-2">
                 <select class="form-control" id="buildingName1" name="buildingName" disabled>
@@ -145,12 +148,12 @@
                     <!-- </span> -->
                 </div>
             </div>
-        </div>    
+        </div>
     </div>
 
-    <div class="form-group">
+    <!-- <div class="form-group">
     <input type="button" value="Add Another Meeting Time" id="addAnotherMeetingTime1" name="addAnotherMeetingTime" class="btn btn-default">
-    </div>
+    </div> -->
 
     <div class="form-group">
     <input type="submit" class="btn btn-default" value="Submit">

@@ -69,17 +69,25 @@
 		return $row;
 	}
 
-	// Get all sections with an additional query
-	function get_all_sections_with_query($conn, $query) {
-		$db_query ="SELECT * FROM `Section`" . $query;
+	function get_all_x_with_query($conn, $x, $query, $desired_field = -1) {
+		$db_query ="SELECT * FROM `$x`" . $query;
 		$sections = array();
 		$result = $conn->query($db_query);
 		// $sections = $result->fetch_all();
 		while ($row = $result->fetch_row()) {
-			array_push($sections, $row);
+			if ($desired_field != -1) {
+				array_push($sections, $row[$desired_field]);
+			} else {
+				array_push($sections, $row);
+			}
 		}
 		$result->close;
 		return $sections;
+	}
+
+	// Get all sections with an additional query
+	function get_all_sections_with_query($conn, $query) {
+		return get_all_x_with_query($conn, "Section", $query);
 	}
 
 	// Get the Building ID given a Room ID
@@ -109,9 +117,19 @@
 		return true;
 	}
 
-	function parse_meeting_times($section) {
+    function json_to_sql($json) {
+        $parameter = json_decode($json);
+
+        if (is_array($parameter)) {
+            return implode(",", $parameter);
+        } else {
+            return $parameter;
+        }
+    }
+
+	function parse_meeting_times($meeting_times) {
 		$parsed_times = array();
-		$meeting_times = json_decode($section[SECTION_TIMES]);
+		// $meeting_times = json_decode($section[SECTION_TIMES]);
 		foreach ($meeting_times as $meeting_time) {
 			preg_match($GLOBALS["date_regex"], $meeting_time, $matches);
 			$days = $matches[1];
@@ -136,7 +154,13 @@
 		public $week_style;
 		public $professor;
 		public $capacity;
-        public $database_id;
+    public $database_id;
+
+		private $database_row;
+
+		public function as_raw_array() {
+			return $database_row;
+		}
 
 		public static function new_from_db_row($conn, $db_row) {
 			$section = new ValpoSection();
@@ -144,7 +168,8 @@
 			$professor = get_x_with_id($conn, "Professor", $db_row[SECTION_PROF]);
 			$semester = get_x_with_id($conn, "Semester", $db_row[SECTION_SEM]);
 
-            $section->database_id = $db_row[SECTION_DBID];
+			$section->database_row = $db_row;
+      $section->database_id = $db_row[SECTION_DBID];
 			$section->name = $class[CLASS_NAME] . "-" . $db_row[SECTION_ID];
 			$section->credit_hours = $class[CLASS_CRHR];
 			$section->title = $class[CLASS_TITLE];

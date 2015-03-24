@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Define the Page Title -->
     <title>Valpo LIMTS</title>
+    <!-- Include Pluralize -->
+    <script type="text/javascript" src='assets/js/pluralize.js'></script>
     <!-- Include MomentJS -->
     <script type="text/javascript" src='//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js'></script>
     <!-- Include all of our jQuery (& Plugins) JS & CSS Files -->
@@ -24,7 +26,7 @@
     <!-- Include all of our In-House files -->
     <link type="text/css" href="assets/css/common.css" rel="stylesheet"/>
 </head>
-    
+
 <header>
 <?php
 include "header.php";
@@ -47,5 +49,5 @@ if ($page) {
 ?>
     </div>
 </body>
-    
+
 </html>
