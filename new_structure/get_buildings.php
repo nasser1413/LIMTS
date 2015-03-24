@@ -14,7 +14,7 @@
 			                FROM  `Building`;");
 	$buildings = array();
 	while ($row = $result->fetch_row()) {
-		array_push($buildings, array("id" => $row[BUILDING_ID], "abbr" => $row[BUILDING_ABRV]));
+		array_push($buildings, array("id" => $row[BUILDING_ID], "abbr" => $row[BUILDING_ABRV], "description" => $row[BUILDING_DESC]));
 	}
     $result->close();
 

@@ -52,6 +52,7 @@
 	define("SEMESTER_END", 4);
 	// Building Information
 	define("BUILDING_ID", 0);
+	define("BUILDING_DESC", 1);
 	define("BUILDING_ABRV", 2);
 	// Semester Types
 	define("EVERY_WEEK", 1);
@@ -156,11 +157,11 @@
 		public $capacity;
     public $database_id;
 
-		private $database_row;
-
-		public function as_raw_array() {
-			return $database_row;
-		}
+		// private $database_row;
+		//
+		// public function as_raw_array() {
+		// 	return $database_row;
+		// }
 
 		public static function new_from_db_row($conn, $db_row) {
 			$section = new ValpoSection();
@@ -168,7 +169,7 @@
 			$professor = get_x_with_id($conn, "Professor", $db_row[SECTION_PROF]);
 			$semester = get_x_with_id($conn, "Semester", $db_row[SECTION_SEM]);
 
-			$section->database_row = $db_row;
+			// $section->database_row = $db_row;
       $section->database_id = $db_row[SECTION_DBID];
 			$section->name = $class[CLASS_NAME] . "-" . $db_row[SECTION_ID];
 			$section->credit_hours = $class[CLASS_CRHR];

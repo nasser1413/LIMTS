@@ -1,7 +1,9 @@
         <!-- Include the table builder -->
         <script src="assets/js/wingpad.tablebuilder.js"></script>
+        <script src="assets/js/bootstrap-multiselect.js"></script>
         <script src="//cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"></script>
         <link type="text/css" rel="stylesheet" href="//cdn.datatables.net/1.10.5/css/jquery.dataTables.min.css" />
+        <link type="text/css" rel="stylesheet" href="assets/css/bootstrap-multiselect.css" />
 
         <script type="text/javascript">
         var calendarView = <?php echo json_encode(!$_GET["table"]) ?>;
@@ -85,7 +87,7 @@
 
                     // Replace the placeholder with the HTML from the tablebuilder
                     // $("#sections").replaceWith(tableBuilder.getHTML());
-                    $("#content").append(tableBuilder.getHTML());
+                    $("#content").replaceWith(tableBuilder.getHTML());
                     $("#sections").DataTable({
                         "columnDefs": [{
                             "orderable": false,
@@ -96,25 +98,97 @@
                 }
             });
         }
+
+        function loadSelector(type, handler) {
+           var url = "get_" + pluralize(type) + ".php";
+           $.ajax({
+	            dataType: "json",
+	            url: url,
+	            success: function(data) {
+		            var selector = $("#" + type + "-selector");
+		            $.each(data, function(i, object) {
+                        var id = object.id,
+                            abbr = object.name ? object.name : object.abbr;
+                        selector
+                            .append($("<option>", { "value" : id, "internal-type" : type })
+                            .text(abbr));
+                    });
+
+                    if (data.length !== 0) {
+                        selector.prop("disabled", false);
+                    } else {
+                        selector.prop("disabled", true);
+                    }
+
+                    selector.multiselect({
+                        buttonWidth: '100%',
+                        maxHeight: 200,
+                        onChange: handler
+                    });
+	            }
+            });
+        }
+
+        function loadRooms(handler) {
+            $.ajax({
+                dataType: "json",
+                url: "get_buildings.php",
+                success: function(buildings) {
+                    var selector = $("#room-selector");
+                    $.each(buildings, function(i, building) {
+                        $.ajax({
+                            dataType: "json",
+                            url: "get_rooms.php",
+                            data: {
+                                building: building.id                            
+                            },
+                            success: function(rooms) {
+                                if (rooms.length === 0) {
+                                    return;                                
+                                }
+                                var optgroup = $("<optgroup label=\"" + building.description + "\"></optgroup>");
+                                selector.append(optgroup);
+
+                                $.each(rooms, function(i, room) {
+                                    optgroup.append("<option value=\"" + room.id + "\" internal-type=\"room\">" + building.abbr + "-" + room.nmbr + "</option>");
+                                });
+
+                                selector.multiselect('rebuild');
+                            }
+                         });
+                    });
+
+                    if (buildings.length !== 0) {
+                        selector.prop("disabled", false);
+                    } else {
+                        selector.prop("disabled", true);
+                    }
+
+                    selector.multiselect({
+                        buttonWidth: '100%',
+                        maxHeight: 200,
+                        enableClickableOptGroups: true,
+                        onChange: handler
+                    });
+                }
+            });
+        }
+
+        loadSelector("professor");
+        loadSelector("class");
+        loadRooms();
+
         </script>
 
         <div class="btn-group btn-group-justified" role="group" style="margin-bottom: 10px">
-            <a href="#" class="btn btn-default" role="button">Left</a>
-            <a href="#" class="btn btn-default" role="button">Middle</a>
+            <select id="room-selector" multiple="multiple" disabled>
+            </select>
+            
+            <select id="class-selector" multiple="multiple" disabled>
+            </select>
 
-            <div class="btn-group" role="group">
-                <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                    Dropdown <span class="caret"></span>
-                </a>
-
-                <ul class="dropdown-menu" role="menu">
-                    <li><a href="#">Action</a></li>
-                    <li><a href="#">Another action</a></li>
-                    <li><a href="#">Something else here</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#">Separated link</a></li>
-                </ul>
-            </div>
+            <select id="professor-selector" multiple="multiple" disabled>
+            </select>
         </div>
 
         <div id="content"></div>
