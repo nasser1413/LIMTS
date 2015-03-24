@@ -21,6 +21,7 @@
 	$date_regex = "/([A-Z]+) *(\d+:\d+[ap])-(\d+:\d+[ap])/";
 
 	// Section Column information
+	define("SECTION_DBID", 0);
 	define("SECTION_ID", 1);
 	define("SECTION_ROOMS", 2);
 	define("SECTION_SEM", 3);
@@ -30,12 +31,16 @@
 	define("SECTION_WEEKS", 7);
 	define("SECTION_MCAP", 8);
 	// Room Column information
+	define("ROOM_ID", 0);
 	define("ROOM_BLDG", 1);
 	define("ROOM_NMBR", 2);
 	define("ROOM_CAP", 3);
 	// Professor Information
+	define("PROFESSOR_ID", 0);
 	define("PROFESSOR_NAME", 1);
+	define("PROFESSOR_VID", 2);
 	// Class Information
+	define("CLASS_ID", 0);
 	define("CLASS_NAME", 1);
 	define("CLASS_CRHR", 2);
 	define("CLASS_TITLE", 4);
@@ -46,6 +51,8 @@
 	define("SEMESTER_START", 3);
 	define("SEMESTER_END", 4);
 	// Building Information
+	define("BUILDING_ID", 0);
+	define("BUILDING_DESC", 1);
 	define("BUILDING_ABRV", 2);
 	// Semester Types
 	define("EVERY_WEEK", 1);
@@ -63,17 +70,25 @@
 		return $row;
 	}
 
-	// Get all sections with an additional query
-	function get_all_sections_with_query($conn, $query) {
-		$db_query ="SELECT * FROM `Section`" . $query;
+	function get_all_x_with_query($conn, $x, $query, $desired_field = -1) {
+		$db_query ="SELECT * FROM `$x`" . $query;
 		$sections = array();
 		$result = $conn->query($db_query);
 		// $sections = $result->fetch_all();
 		while ($row = $result->fetch_row()) {
-			array_push($sections, $row);
+			if ($desired_field != -1) {
+				array_push($sections, $row[$desired_field]);
+			} else {
+				array_push($sections, $row);
+			}
 		}
 		$result->close;
 		return $sections;
+	}
+
+	// Get all sections with an additional query
+	function get_all_sections_with_query($conn, $query) {
+		return get_all_x_with_query($conn, "Section", $query);
 	}
 
 	// Get the Building ID given a Room ID
@@ -103,9 +118,19 @@
 		return true;
 	}
 
-	function parse_meeting_times($section) {
+    function json_to_sql($json) {
+        $parameter = json_decode($json);
+
+        if (is_array($parameter)) {
+            return implode(",", $parameter);
+        } else {
+            return $parameter;
+        }
+    }
+
+	function parse_meeting_times($meeting_times) {
 		$parsed_times = array();
-		$meeting_times = json_decode($section[SECTION_TIMES]);
+		// $meeting_times = json_decode($section[SECTION_TIMES]);
 		foreach ($meeting_times as $meeting_time) {
 			preg_match($GLOBALS["date_regex"], $meeting_time, $matches);
 			$days = $matches[1];
@@ -130,6 +155,13 @@
 		public $week_style;
 		public $professor;
 		public $capacity;
+    public $database_id;
+
+		// private $database_row;
+		//
+		// public function as_raw_array() {
+		// 	return $database_row;
+		// }
 
 		public static function new_from_db_row($conn, $db_row) {
 			$section = new ValpoSection();
@@ -137,6 +169,8 @@
 			$professor = get_x_with_id($conn, "Professor", $db_row[SECTION_PROF]);
 			$semester = get_x_with_id($conn, "Semester", $db_row[SECTION_SEM]);
 
+			// $section->database_row = $db_row;
+      $section->database_id = $db_row[SECTION_DBID];
 			$section->name = $class[CLASS_NAME] . "-" . $db_row[SECTION_ID];
 			$section->credit_hours = $class[CLASS_CRHR];
 			$section->title = $class[CLASS_TITLE];

@@ -1,6 +1,7 @@
 <?php
-  // Import the "Grab Bag"
-  require("common.php");
+  // Include the get_sections_by page w/ Output disabled
+  $OUTPUT_DISABLED = true;
+  include "get_sections_by.php";
 
   // Open an (OO) MySQL Connection
   $conn = new mysqli($GLOBALS["dbhost"], $GLOBALS["dbuser"], $GLOBALS["dbpass"], $GLOBALS["dbname"]);
@@ -45,13 +46,12 @@
   $events = array();
   foreach ($semesters as $semester) {
     $semester_id = $semester[SEMESTER_ID];
-    $sections = get_all_sections_with_query($conn, PHP_EOL . "WHERE `Semester` = $semester_id");
+    // $sections = get_all_sections_with_query($conn, PHP_EOL . "WHERE `Semester` = $semester_id");
 
-    foreach ($sections as $section) {
+    foreach ($filtered_sections as $section) {
       // Grab the relevant section information
-      $meeting_times = parse_meeting_times($section);
-      $class = get_x_with_id($conn, "Class", $section[SECTION_CLASS]);
-      $name = $class[CLASS_NAME] . "-" . $section[SECTION_ID];
+      $meeting_times = parse_meeting_times($section->meeting_times);
+      $name = $section->name;
       // Loop through the time range
       for ($time = $semester[SEMESTER_START]; ($time <= $end) && ($time <= $semester[SEMESTER_END]); $time = strtotime("+1 day", $time)) {
         // Get the day of the week (numbered 1-7)
@@ -76,5 +76,4 @@
 
   // Finally, close the connection
   $conn->close();
-
 ?>
