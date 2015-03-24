@@ -3,7 +3,7 @@
         <img src="assets/Signature_Horiz_Full_web.png" id="brand-img"/>   
     </a>
     <ul class="nav navmenu-nav">
-        <li id="homeLink"><a href="?page=home">Home</a></li>
+        <li id="homeLink"><a href="?page=home">Calendar View</a></li>
         <li id="tableLink"><a href="?page=home&table=1">Table View</a></li>
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Add <b class="caret"></b></a>
@@ -26,7 +26,7 @@
 
     <script type="text/javascript">
         $(function () {
-            var page = "<?php echo ($_GET["page"] ? $_GET["page"] : ($_GET["add"] ? $_GET["add"] : ($_GET["table"] ? $_GET["table"] : "home"))) ?>";
+            var page = "<?php echo ($_GET["table"] ? "table" : ($_GET["page"] ? $_GET["page"] : ($_GET["add"] ? $_GET["add"] : "home"))) ?>";
             var link = $("#" + page + "Link");
             link.addClass("active");
             link.parents(".dropdown").addClass("open");
