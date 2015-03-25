@@ -1,6 +1,7 @@
-var lastEventFilters = {};
+var lastEventFilters = {},
+    activeSemesters = null;
 
-function loadSelector(type, handler) {
+function loadSelector(type, handler, disableMultiselect, addBlank) {
    var url = "get_" + pluralize(type) + ".php";
    $.ajax({
         dataType: "json",
@@ -15,17 +16,20 @@ function loadSelector(type, handler) {
                     .text(abbr));
             });
 
-            if (data.length !== 0) {
-                selector.prop("disabled", false);
-            } else {
-                selector.prop("disabled", true);
+            if (addBlank) {
+                $("<option>", { value: '0', selected: true }).prependTo(selector);
             }
 
-            selector.multiselect({
-                buttonWidth: "100%",
-                maxHeight: 200,
-                onChange: handler
-            });
+            if (!disableMultiselect) {
+                selector.multiselect({
+                    buttonWidth: "100%",
+                    maxHeight: 200,
+                    disableIfEmpty: true,
+                    onChange: handler
+                });
+            } else {
+                selector.change(handler);
+            }
         }
     });
 }
@@ -60,16 +64,11 @@ function loadRooms(onChange, onDone) {
             });
 
             $.when.apply(this, results).done(function() {
-                if (buildings.length !== 0) {
-                    selector.prop("disabled", false);
-                } else {
-                    selector.prop("disabled", true);
-                }
-
                 selector.multiselect({
                     buttonWidth: "100%",
                     maxHeight: 200,
                     enableClickableOptGroups: true,
+                    disableIfEmpty: true,
                     onChange: onChange
                 });
 
@@ -81,7 +80,7 @@ function loadRooms(onChange, onDone) {
     });
 }
 
-function initCalendar() {
+function initCalendar(semestersLoaded) {
     $(function() {
         $("#content").fullCalendar({
             theme: true,
@@ -98,7 +97,13 @@ function initCalendar() {
                     cache: false,
                     data: data,
                     dataType: "json",
-                    success: callback
+                    success: function(feed) {
+                        callback(feed.events);
+                        activeSemesters = feed.semesters;
+                        if (semestersLoaded) {
+                            semestersLoaded();
+                        }
+                    }
                 });
             },
             eventClick: function(calEvent, jsEvent, view) {
