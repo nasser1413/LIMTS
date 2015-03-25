@@ -10,11 +10,25 @@
 		die("Connection failed: " . $conn->connect_error);
 	}
 
-	$result = $conn->query("SELECT *
-			                FROM  `Semester`;");
+    $id = $_GET["id"];
+
+    $query = "SELECT *
+			  FROM  `Semester`";
+
+    if ($id) {
+        $query .= PHP_EOL . "WHERE `id` = " . $id;
+    }
+
+	$result = $conn->query($query);
 	$semesters = array();
 	while ($row = $result->fetch_row()) {
-		array_push($semesters, array("id" => $row[SEMESTER_ID], "name" => $row[SEMESTER_NAME]));
+        $semester_start = strtotime("+1 day", strtotime($row[SEMESTER_START]));
+        $semester_end = strtotime("+1 day", strtotime($row[SEMESTER_END]));
+
+		array_push($semesters, array(   "id" => $row[SEMESTER_ID],
+                                        "name" => $row[SEMESTER_NAME],
+                                        "start" => $semester_start,
+                                        "end" => $semester_end ));
 	}
     $result->close();
 

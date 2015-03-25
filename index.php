@@ -34,7 +34,7 @@ include "header.php";
 </header>
 
 <body>
-    <div class="container">
+    <div class="container" id="main-container">
 <?php
 $page = $_GET["page"];
 $add = $_GET["add"];

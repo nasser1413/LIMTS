@@ -1,59 +1,37 @@
 <?php
-  // Include the get_sections_by page w/ Output disabled
+  // Disable output in included pages whenever possible
   $OUTPUT_DISABLED = true;
+
+  // Include the get_semesters_in_range page
+  include "get_semesters_in_range.php";
+
+  echo "{\"semesters\":" . json_encode($semesters_in_range);
+
+  // TODO: Add a method to merge GET semesters w/ the semesters in range
+
+  // Include the get_sections_by page w/ Output disabled
   include "get_sections_by.php";
 
-  // Open an (OO) MySQL Connection
-  $conn = new mysqli($GLOBALS["dbhost"], $GLOBALS["dbuser"], $GLOBALS["dbpass"], $GLOBALS["dbname"]);
-
-  // Check connection
-  if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-  }
-
-  // Get all of the "Parameters"
-  $start = strtotime($_GET["start"]);
-  $end = strtotime($_GET["end"]);
-
-  // Validate the dates
-  if ($start > $end) {
-    die("Invalid date range");
-  }
-
-  // Grab all of the Semesters
-  $semesters = array();
-  $query = "SELECT *
-            FROM `Semester`";
-  $result = $conn->query($query);
-  while ($row = $result->fetch_row()) {
-    $semester_start = strtotime("+1 day", strtotime($row[SEMESTER_START]));
-    $semester_end = strtotime("+1 day", strtotime($row[SEMESTER_END]));
-    // If the semester is in the desired range add it to the list
-    if ($semester_end >= $start) {
-      array_push($semesters, array( SEMESTER_ID => $row[SEMESTER_ID],
-                                    SEMESTER_START => $semester_start,
-                                    SEMESTER_END => $semester_end ));
-    }
-  }
-  $result->close();
-
-  /* Right now this only handles classes that
+  /* TODO: Right now this only handles classes that
    * meet every week. In other words it does not
    * properly handle ODD_WEEKS or EVEN_WEEKS classes
    */
 
   // For Each of the Semesters, load the sections
   $events = array();
-  foreach ($semesters as $semester) {
+  foreach ($semesters_in_range as $semester) {
     $semester_id = $semester[SEMESTER_ID];
-    // $sections = get_all_sections_with_query($conn, PHP_EOL . "WHERE `Semester` = $semester_id");
 
     foreach ($filtered_sections as $section) {
+      // If the section isn't in our semester we need to skip it
+      if ($section->semester != $semester["name"]) {
+        continue;
+      }
       // Grab the relevant section information
       $meeting_times = parse_meeting_times($section->meeting_times);
       $name = $section->name;
       // Loop through the time range
-      for ($time = $semester[SEMESTER_START]; ($time <= $end) && ($time <= $semester[SEMESTER_END]); $time = strtotime("+1 day", $time)) {
+      for ($time = $semester["start"]; ($time <= $end) && ($time <= $semester["end"]); $time = strtotime("+1 day", $time)) {
         // Get the day of the week (numbered 1-7)
         $day = date("N", $time);
         // If we meet today then...
@@ -72,8 +50,5 @@
   }
 
   // Echo all of the classes as JSON
-  echo json_encode($events);
-
-  // Finally, close the connection
-  $conn->close();
+  echo ",\"events\":" . json_encode($events) . "}";
 ?>
