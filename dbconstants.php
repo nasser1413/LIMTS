@@ -44,8 +44,13 @@
  	// Professor Information
  	define("PROFESSOR_ID", 0);
  	define("PROFESSOR_NAME", 1);
- 	define("PROFESSOR_VID", 2);
+ 	define("PROFESSOR_MAXHRS", 2);
+ 	define("PROFESSOR_TYPE", 3);
+ 	define("PROFESSOR_VID", 4);
 
+    // Professor Type Information
+ 	define("PROFESSORTYPE_CRHR", 2);
+    
  	// Class Information
  	define("CLASS_ID", 0);
  	define("CLASS_NAME", 1);

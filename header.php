@@ -1,10 +1,11 @@
     <nav id="myNavmenu" class="navmenu navmenu-default navmenu-fixed-left offcanvas" role="navigation">
     <a class="navmenu-brand" href="http://www.valpo.edu">
-        <img src="assets/Signature_Horiz_Full_web.png" id="brand-img"/>   
+        <img src="assets/Signature_Horiz_Full_web.png" id="brand-img"/>
     </a>
     <ul class="nav navmenu-nav">
         <li id="homeLink"><a href="?page=home">Calendar View</a></li>
         <li id="tableLink"><a href="?page=home&table=1">Table View</a></li>
+        <li id="constraintsLink"><a href="?page=constraints">Constraints Check</a></li>
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Add <b class="caret"></b></a>
             <ul class="dropdown-menu navmenu-nav" role="menu">

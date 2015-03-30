@@ -16,7 +16,8 @@
 			  FROM  `Semester`";
 
     if ($id) {
-        $query .= PHP_EOL . "WHERE `id` = " . $id;
+        $id = json_to_sql($id);
+        $query .= PHP_EOL . "WHERE `id` IN (" . $id . ")";
     }
 
 	$result = $conn->query($query);

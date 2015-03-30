@@ -1,7 +1,7 @@
 <?php
     echo "{\"sections\":";
     // Import get sections routines
-	include "get_sections_by.php";
+	include "get_sections.php";
     echo ",\"columns\":";
     $columns = array();
     foreach ($filtered_sections[0] as $key => $value) {

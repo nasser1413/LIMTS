@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<constraints>
+    <constraint>
+        <type>preference</type>
+        <scope>global</scope>
+        <time>MWF 10:00a-10:30a</time>
+        <reason>Chapel Break</reason>
+        <priority>high</priority>
+    </constraint>
+
+    <constraint>
+        <type>preference</type>
+        <scope>professor</scope>
+        <object>1</object>
+        <time>MWF 8:00a-10:00a</time>
+        <reason>I have morning meetings</reason>
+        <priority>medium</priority>
+    </constraint>
+</constraints>

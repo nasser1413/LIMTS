@@ -14,7 +14,19 @@
 			                FROM  `Professor`;");
 	$professors = array();
 	while ($row = $result->fetch_row()) {
-		array_push($professors, array("id" => $row[PROFESSOR_ID], "name" => $row[PROFESSOR_NAME]));
+        $credit_hours = $row[PROFESSOR_MAXHRS];
+
+        if (!$credit_hours) {
+            /* We should consider making this a cached map so we don't have to query
+             * the database so often
+             */
+            $type = get_x_with_id($conn, "ProfessorType", $row[PROFESSOR_TYPE]);
+            $credit_hours = $type[PROFESSORTYPE_CRHR];
+        }
+
+		array_push($professors, array(  "id" => $row[PROFESSOR_ID],
+                                        "name" => $row[PROFESSOR_NAME],
+                                        "max_credit_hours" => $credit_hours ));
 	}
     $result->close();
 

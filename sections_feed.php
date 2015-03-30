@@ -10,7 +10,7 @@
   // TODO: Add a method to merge GET semesters w/ the semesters in range
 
   // Include the get_sections_by page w/ Output disabled
-  include "get_sections_by.php";
+  include "get_sections.php";
 
   /* TODO: Right now this only handles classes that
    * meet every week. In other words it does not
