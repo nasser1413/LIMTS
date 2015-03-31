@@ -1,10 +1,10 @@
 <?php
 	// Import the "Grab Bag"
 	require("common.php");
-	
+
 	// Open an (OO) MySQL Connection
 	$conn = new mysqli($GLOBALS["dbhost"], $GLOBALS["dbuser"], $GLOBALS["dbpass"], $GLOBALS["dbname"]);
-	
+
 	// Check connection
 	if ($conn->connect_error) {
 		die("Connection failed: " . $conn->connect_error);
@@ -16,7 +16,7 @@
 			  FROM  `Semester`";
 
     if ($id) {
-        $id = json_to_sql($id);
+        $id = implode_parameters($id);
         $query .= PHP_EOL . "WHERE `id` IN (" . $id . ")";
     }
 

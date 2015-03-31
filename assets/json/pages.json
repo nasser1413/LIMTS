@@ -1,0 +1,8 @@
+[
+    {"name": "calendar", "title": "Calendar View"},
+    {"name": "table", "title": "Table View"},
+    {"name": "constraints", "title": "Constraints Check"},
+    {"name": "add", "title": "Add", "dropdown": true, "pages": [
+        {"name": "section", "title": "Section"}
+    ]}
+]

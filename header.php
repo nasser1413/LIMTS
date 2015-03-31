@@ -2,7 +2,7 @@
     <a class="navmenu-brand" href="http://www.valpo.edu">
         <img src="assets/Signature_Horiz_Full_web.png" id="brand-img"/>
     </a>
-    <ul class="nav navmenu-nav">
+    <ul class="nav navmenu-nav" id="main-nav">
         <li id="homeLink"><a href="?page=home">Calendar View</a></li>
         <li id="tableLink"><a href="?page=home&table=1">Table View</a></li>
         <li id="constraintsLink"><a href="?page=constraints">Constraints Check</a></li>
@@ -25,11 +25,8 @@
         </button>
     </div>
 
+    <script type="text/javascript" src="assets/js/header.js"></script>
+
     <script type="text/javascript">
-        $(function () {
-            var page = "<?php echo ($_GET["table"] ? "table" : ($_GET["page"] ? $_GET["page"] : ($_GET["add"] ? $_GET["add"] : "home"))) ?>";
-            var link = $("#" + page + "Link");
-            link.addClass("active");
-            link.parents(".dropdown").addClass("open");
-        });
+        $(setupHeader);
     </script>

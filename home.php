@@ -1,12 +1,11 @@
         <!-- Include the table builder -->
-        <script src="assets/js/wingpad.tablebuilder.js"></script>
-        <script src="assets/js/bootstrap-multiselect.js"></script>
-        <script src="assets/js/jquery-deparam.js"></script>
-        <script src="//cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"></script>
-        <script src="assets/js/home.js"></script>
-
+        <script type="text/javascript" src="assets/js/wingpad.tablebuilder.js"></script>
+        <script type="text/javascript" src="//cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"></script>
+        <script type="text/javascript" src="assets/js/home.js"></script>
+        <script type="text/javascript" type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.3.1/fullcalendar.min.js"></script>
+        <link type="text/css" rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.3.1/fullcalendar.min.css"></script>
+        <link type="text/css" rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.3.1/fullcalendar.print.css" media="print"></script>
         <link type="text/css" rel="stylesheet" href="//cdn.datatables.net/1.10.5/css/jquery.dataTables.min.css" />
-        <link type="text/css" rel="stylesheet" href="assets/css/bootstrap-multiselect.css" />
 
         <script type="text/javascript">
         var calendarView = <?php echo json_encode(!$_GET["table"]) ?>;
@@ -51,19 +50,19 @@
 
         function onHashChanged() {
             var filters = $.deparam(location.hash.substr(1));
-            var jsonFilters = {};
+            // var jsonFilters = {};
 
             for (var filter in filters) {
                 if (filters.hasOwnProperty(filter)) {
                     $("#" + filter + "-selector").multiselect("select", filters[filter]);
-                    jsonFilters[pluralize(filter)] = JSON.stringify(filters[filter]);
+                    // jsonFilters[pluralize(filter)] = JSON.stringify(filters[filter]);
                 }
             }
 
             if (calendarView) {
-                updateCalendar(jsonFilters);
+                updateCalendar(filters);
             } else {
-                initTable(jsonFilters);
+                initTable(filters);
             }
         }
 
