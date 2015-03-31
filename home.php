@@ -9,37 +9,7 @@
         <link type="text/css" rel="stylesheet" href="//cdn.datatables.net/1.10.5/css/jquery.dataTables.min.css" />
 
         <script type="text/javascript">
-        var calendarView = <?php echo json_encode(!$_GET["table"]) ?>;
-
-        // function onCalendarSemestersLoaded() {
-        //     var checkboxGroup = $("#semesters-group");
-        //     checkboxGroup.empty();
-        //
-        //     $.each(activeSemesters, function(i, semester) {
-        //         checkboxGroup.append('<label class="checkbox-inline"><input type="checkbox" id="semesterCheckbox' +
-        //                                 semester.id + '" value="option1" checked> ' + semester.name + '</label>');
-        //     });
-        // }
-
-        // function onSemesterSelected() {
-        //     $("select option:selected").each(function() {
-        //         var option = this;
-        //
-        //         $.ajax({
-        //             dataType: "json",
-        //             url: "get_semesters.php",
-        //             data: {
-        //                 id: option.value
-        //             },
-        //             success: function(semesters) {
-        //                 if (semesters[0]) {
-        //                     $("#content").fullCalendar("gotoDate", moment.unix(semesters[0].start));
-        //                     $("#semester-selector").val("0");
-        //                 }
-        //             }
-        //         });
-        //     });
-        // }
+        var calendarView = getParameterByName("page") === "calendar";
 
         function onFiltersChanged(option, checked, select) {
             if (checked) {
@@ -78,7 +48,6 @@
         }
 
         loadSelector("professor", onFiltersChanged);
-        // loadSelector("semester", onSemesterSelected, true, true);
         loadSelector("class", onFiltersChanged);
         loadRooms(onFiltersChanged, onHashChanged);
         Filters.hashchange = onHashChanged;
