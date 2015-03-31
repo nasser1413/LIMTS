@@ -1,14 +1,3 @@
-function ajaxLoadJSON(type, handler, data) {
-    return $.ajax({
-        dataType: "json",
-        url: "get_" + pluralize(type) + ".php",
-        data: data,
-        success: function(objects) {
-            $.each(objects, handler);
-        }
-    });
-}
-
 function initConstraints(semesters) {
     $("#constraints").empty();
     $("#professors").empty();

@@ -24,6 +24,8 @@
     <link type="text/css" rel="stylesheet" href="assets/css/bootstrap-multiselect.css"/>
     <link type="text/css" href="assets/css/jasny-bootstrap.min.css" rel="stylesheet"/>
     <!-- Include all of our In-House files -->
+    <script type="text/javascript" src="assets/js/limts.ajax-core.js"></script>
+    <script type="text/javascript" src="assets/js/limts.filters.js"></script>
     <link type="text/css" href="assets/css/common.css" rel="stylesheet"/>
 </head>
 

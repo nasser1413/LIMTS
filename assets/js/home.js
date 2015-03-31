@@ -1,38 +1,4 @@
-var lastEventFilters = {},
-    activeSemesters = null;
-
-function loadSelector(type, handler, disableMultiselect, addBlank) {
-   var url = "get_" + pluralize(type) + ".php";
-   $.ajax({
-        dataType: "json",
-        url: url,
-        success: function(data) {
-            var selector = $("#" + type + "-selector");
-            $.each(data, function(i, object) {
-                var id = object.id,
-                    abbr = object.name ? object.name : object.abbr;
-                selector
-                    .append($("<option>", { "value" : id, "internal-type" : type })
-                    .text(abbr));
-            });
-
-            if (addBlank) {
-                $("<option>", { value: '0', selected: true }).prependTo(selector);
-            }
-
-            if (!disableMultiselect) {
-                selector.multiselect({
-                    buttonWidth: "100%",
-                    maxHeight: 200,
-                    disableIfEmpty: true,
-                    onChange: handler
-                });
-            } else {
-                selector.change(handler);
-            }
-        }
-    });
-}
+var lastEventFilters = {};
 
 function loadRooms(onChange, onDone) {
     $.ajax({
@@ -46,11 +12,11 @@ function loadRooms(onChange, onDone) {
                     dataType: "json",
                     url: "get_rooms.php",
                     data: {
-                        building: building.id                            
+                        building: building.id
                     },
                     success: function(rooms) {
                         if (rooms.length === 0) {
-                            return;                                
+                            return;
                         }
                         var optgroup = $("<optgroup label=\"" + building.description + "\"></optgroup>");
                         selector.append(optgroup);
@@ -99,7 +65,11 @@ function initCalendar(semestersLoaded) {
                     dataType: "json",
                     success: function(feed) {
                         callback(feed.events);
-                        activeSemesters = feed.semesters;
+
+                        if (JSON.stringify(SemestersFooter.activeSemesters) !== JSON.stringify(feed.semesters)) {
+                            SemestersFooter.activeSemesters = feed.semesters;
+                        }
+
                         if (semestersLoaded) {
                             semestersLoaded();
                         }
@@ -191,23 +161,4 @@ function initTable(filters) {
             });
         }
     });
-}
-
-function addFilter(type, id) {
-    var filters = $.deparam(location.hash.substr(1));
-    if (filters[type] === undefined) {
-        filters[type] = [ id ];
-    } else if ($.inArray(id, filters[type]) === -1) {
-        filters[type].push(id);
-    }
-    location.hash = $.param(filters);
-}
-
-function removeFilter(type, id) {
-    var filters = $.deparam(location.hash.substr(1));
-    var index = $.inArray(id, filters[type]);
-    if (index !== -1) {
-        filters[type].splice(index, 1);
-    }
-    location.hash = $.param(filters);
 }

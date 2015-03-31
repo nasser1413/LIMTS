@@ -5,13 +5,6 @@ function onNavLinkClicked() {
     window.location.href = "?page=" + name + location.hash;
 }
 
-function getParameterByName(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-    results = regex.exec(location.search);
-    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-}
-
 function onHeaderPagesLoaded(pages) {
     var mainNav = $("#main-nav");
     mainNav.empty();

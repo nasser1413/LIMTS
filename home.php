@@ -1,4 +1,5 @@
         <!-- Include the table builder -->
+        <script type="text/javascript" src="assets/js/limts.semesters-footer.js"></script>
         <script type="text/javascript" src="assets/js/wingpad.tablebuilder.js"></script>
         <script type="text/javascript" src="//cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"></script>
         <script type="text/javascript" src="assets/js/home.js"></script>
@@ -10,52 +11,50 @@
         <script type="text/javascript">
         var calendarView = <?php echo json_encode(!$_GET["table"]) ?>;
 
-        function onCalendarSemestersLoaded() {
-            var checkboxGroup = $("#semesters-group");
-            checkboxGroup.empty();
+        // function onCalendarSemestersLoaded() {
+        //     var checkboxGroup = $("#semesters-group");
+        //     checkboxGroup.empty();
+        //
+        //     $.each(activeSemesters, function(i, semester) {
+        //         checkboxGroup.append('<label class="checkbox-inline"><input type="checkbox" id="semesterCheckbox' +
+        //                                 semester.id + '" value="option1" checked> ' + semester.name + '</label>');
+        //     });
+        // }
 
-            $.each(activeSemesters, function(i, semester) {
-                checkboxGroup.append('<label class="checkbox-inline"><input type="checkbox" id="semesterCheckbox' +
-                                        semester.id + '" value="option1" checked> ' + semester.name + '</label>');
-            });
-        }
-
-        function onSemesterSelected() {
-            $("select option:selected").each(function() {
-                var option = this;
-
-                $.ajax({
-                    dataType: "json",
-                    url: "get_semesters.php",
-                    data: {
-                        id: option.value
-                    },
-                    success: function(semesters) {
-                        if (semesters[0]) {
-                            $("#content").fullCalendar("gotoDate", moment.unix(semesters[0].start));
-                            $("#semester-selector").val("0");
-                        }
-                    }
-                });
-            });
-        }
+        // function onSemesterSelected() {
+        //     $("select option:selected").each(function() {
+        //         var option = this;
+        //
+        //         $.ajax({
+        //             dataType: "json",
+        //             url: "get_semesters.php",
+        //             data: {
+        //                 id: option.value
+        //             },
+        //             success: function(semesters) {
+        //                 if (semesters[0]) {
+        //                     $("#content").fullCalendar("gotoDate", moment.unix(semesters[0].start));
+        //                     $("#semester-selector").val("0");
+        //                 }
+        //             }
+        //         });
+        //     });
+        // }
 
         function onFiltersChanged(option, checked, select) {
             if (checked) {
-                addFilter(option.attr("internal-type"), option.val());
+                Filters.add(option.attr("internal-type"), option.val());
             } else {
-                removeFilter(option.attr("internal-type"), option.val());
+                Filters.remove(option.attr("internal-type"), option.val());
             }
         }
 
         function onHashChanged() {
-            var filters = $.deparam(location.hash.substr(1));
-            // var jsonFilters = {};
+            var filters = Filters.filters;
 
             for (var filter in filters) {
-                if (filters.hasOwnProperty(filter)) {
+                if (filters.hasOwnProperty(filter) && (filter !== "semester")) {
                     $("#" + filter + "-selector").multiselect("select", filters[filter]);
-                    // jsonFilters[pluralize(filter)] = JSON.stringify(filters[filter]);
                 }
             }
 
@@ -67,7 +66,11 @@
         }
 
         if (calendarView) {
-            initCalendar(onCalendarSemestersLoaded);
+            initCalendar();
+
+            SemestersFooter.jumpto = function(date) {
+                $("#content").fullCalendar("gotoDate", date);
+            };
         } else {
             $(function() {
                 $("#semester-selector").prop("disabled", true);
@@ -75,13 +78,10 @@
         }
 
         loadSelector("professor", onFiltersChanged);
-        loadSelector("semester", onSemesterSelected, true, true);
+        // loadSelector("semester", onSemesterSelected, true, true);
         loadSelector("class", onFiltersChanged);
         loadRooms(onFiltersChanged, onHashChanged);
-
-        $(function() {
-            $(window).bind('hashchange', onHashChanged);
-        });
+        Filters.hashchange = onHashChanged;
         </script>
 
         <div class="btn-group btn-group-justified" id="main-btn-group" role="group">
