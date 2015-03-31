@@ -42,8 +42,8 @@ if ($page) {
     $page = str_replace("-", "_", $page);
 
     if ($page == "table") {
-        $_GET["table"] = 1;
         $page = "home";
+        $_GET["table"] = true;
     } else if ($page == "calendar") {
         $page = "home";
     }

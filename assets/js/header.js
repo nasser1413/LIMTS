@@ -2,7 +2,7 @@ var pagesLocation = "assets/json/pages.json";
 
 function onNavLinkClicked() {
     var name = $(this).attr("name");
-    window.location.href = "?page=" + name;
+    window.location.href = "?page=" + name + location.hash;
 }
 
 function getParameterByName(name) {

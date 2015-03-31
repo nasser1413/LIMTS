@@ -4,5 +4,6 @@
     {"name": "constraints", "title": "Constraints Check"},
     {"name": "add", "title": "Add", "dropdown": true, "pages": [
         {"name": "section", "title": "Section"}
-    ]}
+    ]},
+    {"name": "about", "title": "About"}
 ]
