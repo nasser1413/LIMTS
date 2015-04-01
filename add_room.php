@@ -1,27 +1,7 @@
 <script type="text/javascript">
-
-var modifiedCapacity = false;
-
-function onFormSubmitted() {
-    $("#warningAlert1").offcanvas('show');
-}
-
-function onCapacityChanged() {
-    modifiedCapacity = true;
-}
-
-function onRoomSelected() {
-    var selectedCapacity = $("#roomName1 option:selected").attr("_cap");
-    if (!modifiedCapacity && selectedCapacity) {
-        $("#maxCapacity1").val(selectedCapacity);
-    }
-}
-
-loadSelector("room");
-loadSelector("buliding");
-$(function() {
-    $("#maxCapacity1").change(onCapacityChanged);
-});
+loadSelector("building", function() {
+    alert("you selected something...");
+}, true, false);
 </script>
 
 
@@ -33,27 +13,31 @@ $(function() {
 <form action="javascript:onFormSubmitted()" id="mainForm">
 
     <div class="form-group">
-    <label for="roomName1">Room Name:</label>
-    <input type="text" class="form-control" id="roomName1" name="roomName">
-    </div>
-	
-    <div class="form-group">
-    <label for="roomNum1">Room Number:</label>
-    <select class="form-control" id="roomNum1" name="roomNum">
+    <label for="building-selector">Building:</label>
+    <select class="form-control" id="building-selector" name="building">
     </select>
+    </div>
+
+    <div class="form-group">
+    <label for="room-number">Room Number:</label>
+    <input type="text" class="form-control" id="room-number" name="room-number">
 	</div>
-	
+
     <div class="form-group">
     <label for="maxCapacity1">Room Capacity:</label>
     <input type="text" class="form-control" id="maxCapacity1" name="maxCapacity">
     </div>
-     
+
     <div class="form-group">
     <label for="handicapAccessible1">Handicap Accessible:</label>
-    <select class="form-control" id="handicapAccessible1" name= "handicapAccessible">
-    </select>
+    <!-- <div class="radio"> -->
+        <label class="radio-inline"><input type="radio" name="optradio">Yes</label>
+    <!-- </div> -->
+    <!-- <div class="radio"> -->
+        <label class="radio-inline"><input type="radio" name="optradio">No</label>
+    <!-- </div> -->
 	</div>
-	
+
     <div class="form-group">
     <input type="submit" class="btn btn-default" value="Submit">
     </div>

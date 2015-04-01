@@ -1,6 +1,6 @@
 <script type="text/javascript">
 loadSelector("professortype", function() {
-
+    alert("you selected something...");
 }, true, false);
 </script>
 
@@ -13,7 +13,7 @@ loadSelector("professortype", function() {
     </div>
 
     <div class="form-group">
-    <label for="professorType1">Professor Type:</label>
+    <label for="professortype-selector">Professor Type:</label>
     <select class="form-control" id="professortype-selector" name="professortype">
     </select>
 	</div>
