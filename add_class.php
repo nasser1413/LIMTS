@@ -102,7 +102,7 @@
     <div class="form-group">
     <label for="classTitleName1">Class Title:</label>
     <input type="text" class="form-control" id="classTitleName1" name="classTitleName">
-	<p class= "help-block"><i>FOR EXAMPLE: GES-206</i></p>
+	<p class= "help-block"><i>FOR EXAMPLE: GEM-206</i></p>
     </div>
 	
     <div class="form-group">
@@ -110,6 +110,10 @@
     <input type="text" class="form-control" id="creditHours1" name="creditHours">
     </div>
 	
+    <div>
+    <label for="contactHours1">Contact Hours:</label>
+    <input type= "text" class="form-control" id="contactHours1" name="contactHours">
+    </div>
 	
     <div class="form-group">
     <input type="submit" class="btn btn-default" value="Submit">
