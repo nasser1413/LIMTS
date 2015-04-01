@@ -2,10 +2,10 @@
 
 <constraints>
     <constraint>
-        <type>preference</type>
+        <type>limitation</type>
         <scope>global</scope>
         <time>MWF 10:00a-10:30a</time>
-        <reason>Chapel Break</reason>
+        <reason>of the university's Chapel Break</reason>
         <priority>high</priority>
     </constraint>
 
@@ -14,16 +14,16 @@
         <scope>professor</scope>
         <object>1</object>
         <time>MWF 8:00a-10:00a</time>
-        <reason>I have morning meetings</reason>
+        <reason>he has morning meetings</reason>
         <priority>medium</priority>
     </constraint>
 
     <constraint>
-        <type>preference</type>
+        <type>unavailable</type>
         <scope>room</scope>
         <object>1</object>
         <time>MWF 8:00a-10:00a</time>
-        <reason>Math classes taught here</reason>
+        <reason>math classes are being taught there</reason>
         <priority>medium</priority>
     </constraint>
 </constraints>

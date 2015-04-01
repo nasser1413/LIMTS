@@ -25,7 +25,10 @@
 	$result = $conn->query($query);
 	$rooms = array();
 	while ($row = $result->fetch_row()) {
-		array_push($rooms, array("id" => $row[ROOM_ID], "nmbr" => $row[ROOM_NMBR], "cap" => $row[ROOM_CAP]));
+		$building = get_x_with_id($conn, "Building", $row[ROOM_BLDG]);
+		$name = $building[BUILDING_ABRV] . "-" . $row[ROOM_NMBR];
+
+		array_push($rooms, array("id" => $row[ROOM_ID], "name" => $name, "nmbr" => $row[ROOM_NMBR], "cap" => $row[ROOM_CAP]));
 	}
     $result->close();
 

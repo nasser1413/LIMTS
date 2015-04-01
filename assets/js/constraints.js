@@ -23,7 +23,7 @@ function initConstraints(semesters) {
                         id: id
                     });
                 } else {
-                    $("<li></li>").html(scope + " " + type + " during " + time + " because " + reason).appendTo("#constraints");
+                    $("<li></li>").html("Global " + type + " during " + time + " because " + reason).appendTo("#constraints");
                 }
             });
         },

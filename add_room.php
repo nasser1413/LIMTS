@@ -30,12 +30,8 @@ loadSelector("building", function() {
 
     <div class="form-group">
     <label for="handicapAccessible1">Handicap Accessible:</label>
-    <!-- <div class="radio"> -->
-        <label class="radio-inline"><input type="radio" name="optradio">Yes</label>
-    <!-- </div> -->
-    <!-- <div class="radio"> -->
-        <label class="radio-inline"><input type="radio" name="optradio">No</label>
-    <!-- </div> -->
+    <label class="radio-inline"><input type="radio" name="optradio">Yes</label>
+    <label class="radio-inline"><input type="radio" name="optradio">No</label>
 	</div>
 
     <div class="form-group">
