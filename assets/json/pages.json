@@ -3,10 +3,10 @@
     {"name": "table", "title": "Table View"},
     {"name": "constraints", "title": "Constraints Check"},
     {"name": "add", "title": "Add", "dropdown": true, "pages": [
-        {"name": "section", "title": "Section"}
-        {"name": "building", "title": "Building"}
-        {"name": "class", "title": "Class"}
-        {"name": "professor", "title": "Professor"}
+        {"name": "section", "title": "Section"},
+        {"name": "building", "title": "Building"},
+        {"name": "class", "title": "Class"},
+        {"name": "professor", "title": "Professor"},
         {"name": "semester", "title": "Semester"} 
     ]},
     {"name": "about", "title": "About"}
