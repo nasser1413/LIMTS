@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+
+<img src="assets/Signature_Horiz_Full_web.png" id="main-image">
+
+<script type="text/javascript">
+    var BrightnessJS = function(originalImage, brightness) {
+        if (!(originalImage instanceof HTMLImageElement)) {
+            throw 'the element must be an html image element';
+        }
+        var image = new Image();
+        var canvas = document.createElement('canvas');
+        var context = canvas.getContext('2d');
+        var width, height;
+        var originalUrl = originalImage.src;
+
+        var reset = function() {
+            brightness = 0;
+
+            image = new Image();
+            image.onload = onimageload;
+            image.src = originalUrl + '?_t=' + (+(new Date()));
+        };
+
+        var apply = function(brightness) {
+            context.clearRect(0, 0, width, height);
+            context.drawImage(image, 0, 0, width, height);
+
+            var idx,
+                imageData = context.getImageData(0, 0, width, height),
+                _imageData = imageData.data;
+            /* loop backwards so the length has to be evaluated only once,
+             *      --i is faster than ++i, i-- or i++
+             */
+            for (var i = (width * height); i >= 0; --i) {
+                // idx = i * 4;
+                // bitshift operartions are faster
+                idx = i << 2;
+
+                _imageData[idx  ] += brightness;
+                _imageData[idx+1] += brightness;
+                _imageData[idx+2] += brightness;
+            }
+
+            context.putImageData(imageData, 0, 0);
+            originalImage.src = context.canvas.toDataURL('image/jpeg');
+        };
+
+        var onimageload = function() {
+            width = canvas.width = image.width;
+            height = canvas.height = image.height;
+
+            apply(brightness);
+        };
+
+        image.onload = onimageload;
+        image.src = originalImage.src;
+
+        return {
+            apply: apply,
+            reset: reset
+        };
+    };
+
+    var brightnessAPI;
+    $(function() {
+        brightnessAPI = BrightnessJS($("#main-image")[0], 100);
+    });
+</script>
+
+</html>

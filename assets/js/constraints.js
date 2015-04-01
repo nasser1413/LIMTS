@@ -9,10 +9,22 @@ function initConstraints(semesters) {
         dataType: "xml",
         success: function(xml){
             $(xml).find("constraint").each(function(){
-                var information = $(this).find("scope").text() + " " + $(this).find("type").text();
+                var scope = $(this).find("scope").text();
                 var time = $(this).find("time").text();
                 var reason = $(this).find("reason").text();
-                $("<li></li>").html(information + " during " + time + " because " + reason).appendTo("#constraints");
+                var type =  $(this).find("type").text();
+                if (scope !== "global") {
+                    var id = $(this).find("object").text();
+
+                    ajaxLoadJSON(scope, function(i, object) {
+                        var name = (object.name || object.abbr || (scope + " " + id));
+                        $("<li></li>").html(name + " " + type + " during " + time + " because " + reason).appendTo("#constraints");
+                    }, {
+                        id: id
+                    });
+                } else {
+                    $("<li></li>").html(scope + " " + type + " during " + time + " because " + reason).appendTo("#constraints");
+                }
             });
         },
         error: function() {

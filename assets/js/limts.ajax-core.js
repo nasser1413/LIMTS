@@ -5,12 +5,16 @@ function loadSelector(type, handler, disableMultiselect, addBlank) {
         url: url,
         success: function(data) {
             var selector = $("#" + type + "-selector");
+            var filters = Filters.filters;
             $.each(data, function(i, object) {
                 var id = object.id,
-                    abbr = object.name ? object.name : object.abbr;
-                selector
-                    .append($("<option>", { "value" : id, "internal-type" : type })
-                    .text(abbr));
+                    abbr = object.name ? object.name : object.abbr,
+                    checked = $.inArray(id, filters[type]) !== -1;
+
+                selector.append(
+                    $("<option>", { "value" : id, "internal-type" : type })
+                        .text(abbr).prop("selected", checked)
+                );
             });
 
             if (addBlank) {

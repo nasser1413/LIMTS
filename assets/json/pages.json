@@ -4,10 +4,10 @@
     {"name": "constraints", "title": "Constraints Check"},
     {"name": "add", "title": "Add", "dropdown": true, "pages": [
         {"name": "section", "title": "Section"},
-        {"name": "building", "title": "Building"},
         {"name": "class", "title": "Class"},
         {"name": "professor", "title": "Professor"},
-        {"name": "semester", "title": "Semester"} 
+        {"name": "semester", "title": "Semester"},
+        {"name": "building", "title": "Building"}
     ]},
     {"name": "about", "title": "About"}
 ]

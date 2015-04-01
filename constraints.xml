@@ -17,4 +17,13 @@
         <reason>I have morning meetings</reason>
         <priority>medium</priority>
     </constraint>
+
+    <constraint>
+        <type>preference</type>
+        <scope>room</scope>
+        <object>1</object>
+        <time>MWF 8:00a-10:00a</time>
+        <reason>Math classes taught here</reason>
+        <priority>medium</priority>
+    </constraint>
 </constraints>

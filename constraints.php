@@ -1,14 +1,16 @@
         <script type="text/javascript" src="assets/js/constraints.js"></script>
+        <script type="text/javascript" src="assets/js/limts.semesters-footer.js"></script>
 
         <script type="text/javascript">
             function onHashChanged() {
-                var filters = $.deparam(location.hash.substr(1));
+                var filters = Filters.filters;
 
                 initConstraints(filters.semester);
             }
 
             $(function() {
-                $(window).bind("hashchange", onHashChanged);
+                SemestersFooter.mode = "multi-selector";
+                Filters.hashchange = onHashChanged;
                 onHashChanged();
             });
         </script>
@@ -20,3 +22,13 @@
 
         <h2>Professors:</h2>
         <ul id="professors"></ul>
+
+        <div id="footer">
+            <form class="form-inline">
+                <div class="form-group" style="float:right">
+                    <label for="semester-selector" id="jump-label">Jump to:</label>
+                    <select id="semester-selector" class="form-control">
+                    </select>
+                </div>
+            </form>
+        </div>

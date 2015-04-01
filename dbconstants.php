@@ -49,8 +49,10 @@
  	define("PROFESSOR_VID", 4);
 
     // Professor Type Information
+ 	define("PROFESSORTYPE_ID", 0);
+  	define("PROFESSORTYPE_NAME", 1);
  	define("PROFESSORTYPE_CRHR", 2);
-    
+
  	// Class Information
  	define("CLASS_ID", 0);
  	define("CLASS_NAME", 1);

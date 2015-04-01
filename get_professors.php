@@ -1,17 +1,26 @@
 <?php
 	// Import the "Grab Bag"
 	require("common.php");
-	
+
 	// Open an (OO) MySQL Connection
 	$conn = new mysqli($GLOBALS["dbhost"], $GLOBALS["dbuser"], $GLOBALS["dbpass"], $GLOBALS["dbname"]);
-	
+
 	// Check connection
 	if ($conn->connect_error) {
 		die("Connection failed: " . $conn->connect_error);
 	}
 
-	$result = $conn->query("SELECT *
-			                FROM  `Professor`;");
+	$id = $_GET["id"];
+
+	$query = "SELECT *
+			  FROM  `Professor`";
+
+	if ($id) {
+		$id = implode_parameters($id);
+		$query .= PHP_EOL . "WHERE `id` IN (" . $id . ")";
+	}
+
+	$result = $conn->query($query);
 	$professors = array();
 	while ($row = $result->fetch_row()) {
         $credit_hours = $row[PROFESSOR_MAXHRS];

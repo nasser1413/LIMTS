@@ -7,7 +7,7 @@ function _SemestersFooter() {
         set: function(val) {
             if ((val === "checkboxes" || val === "multi-selector") && val !== this._mode) {
                 this._mode = val;
-                this.modechange();
+                this.initSelector();
             }
         }
     });
@@ -59,15 +59,6 @@ _SemestersFooter.prototype.getActiveIds = function() {
     return ids;
 }
 
-_SemestersFooter.prototype.modechange = function() {
-    if (this.mode !== "checkboxes") {
-        console.log("We currently only support checkboxes mode.");
-    } else {
-        this.initSelector();
-    }
-}
-
-
 _SemestersFooter.prototype.checkboxchange = function(event) {
     var id = event.data;
 
@@ -110,27 +101,38 @@ _SemestersFooter.prototype.semesterschange = function(val) {
     Filters.add("semester", this.getActiveIds());
 }
 
-_SemestersFooter.prototype.semesterselected = function() {
-    // TODO: This is a quick fix to make this work, it should be investigated
-    var handler = SemestersFooter.jumpto;
+/* TODO: We need to investigate why this function is getting called with the
+ *          wrong context! It is messing with things >.<
+ */
+_SemestersFooter.prototype.semesterselected = function(option, checked, select) {
+    if (SemestersFooter.mode === "checkboxes") {
+        var handler = SemestersFooter.jumpto;
 
-    $("select option:selected").each(function() {
-        var option = this;
+        $("select option:selected").each(function() {
+            var option = this;
 
-        ajaxLoadJSON("semester", function(i, semester) {
-            // TODO: This is *another* quick fix
-            handler.apply(SemestersFooter, [moment.unix(semester.start)]);
-            $("#semester-selector").val("0");
-        }, {
-            id: option.value
+            ajaxLoadJSON("semester", function(i, semester) {
+                // TODO: This is *another* quick fix
+                handler.apply(SemestersFooter, [moment.unix(semester.start)]);
+                $("#semester-selector").val("0");
+            }, {
+                id: option.value
+            });
         });
-    });
+    } else if (checked) {
+        Filters.add(option.attr("internal-type"), option.val());
+    } else {
+        Filters.remove(option.attr("internal-type"), option.val());
+    }
 }
 
 _SemestersFooter.prototype.initSelector = function() {
-    loadSelector("semester", this.semesterselected, true, true);
+    if (this.mode === "multi-selector") {
+        $("#jump-label").text("Select Semesters:");
+        $("#semester-selector").attr("multiple", "multiple");
+    }
+
+    loadSelector("semester", this.semesterselected, this.mode === "checkboxes", this.mode === "checkboxes");
 }
 
 var SemestersFooter = new _SemestersFooter();
-SemestersFooter.mode = "checkboxes";
-SemestersFooter.activeSemesters = [];

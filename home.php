@@ -22,12 +22,6 @@
         function onHashChanged() {
             var filters = Filters.filters;
 
-            for (var filter in filters) {
-                if (filters.hasOwnProperty(filter) && (filter !== "semester")) {
-                    $("#" + filter + "-selector").multiselect("select", filters[filter]);
-                }
-            }
-
             if (calendarView) {
                 updateCalendar(filters);
             } else {
@@ -37,13 +31,13 @@
 
         if (calendarView) {
             initCalendar();
-
+            SemestersFooter.mode = "checkboxes";
             SemestersFooter.jumpto = function(date) {
                 $("#content").fullCalendar("gotoDate", date);
             };
         } else {
             $(function() {
-                $("#semester-selector").prop("disabled", true);
+                SemestersFooter.mode = "multi-selector";
             });
         }
 
@@ -74,7 +68,7 @@
                     </div>
                 </div>
                 <div class="form-group" style="float:right">
-                    <label for="semester-selector">Jump to:</label>
+                    <label for="semester-selector" id="jump-label">Jump to:</label>
                     <select id="semester-selector" class="form-control">
                     </select>
                 </div>
