@@ -129,6 +129,7 @@
         <button type="button" class="btn btn-default" style="float: right" id="addButton1" form="mainForm">
             <span class="glyphicon glyphicon-plus"></span>
         </button>
+        
         <div class="row" id="meetingGroup1">
             <div class="col-xs-2">
                 <select class="form-control" id="buildingName1" name="buildingName" disabled>

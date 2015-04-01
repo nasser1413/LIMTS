@@ -1,7 +1,7 @@
 <script type="text/javascript">
 loadSelector("professortype", function() {
     alert("you selected something...");
-}, true, false);
+}, true, true);
 </script>
 
 <h1>Add Professor</h1>
@@ -21,11 +21,7 @@ loadSelector("professortype", function() {
     <div class="form-group">
     <label for="MaxCreditHours1">Max Credit Hours:</label>
     <input type="text" class="form-control" id="MaxCreditHours1" name="MaxCreditHours">
-    </div>
-
-	<div class="form-group">
-    <label for="contactHours1">Contact Hours:</label>
-    <input type="text" class="form-control" id="contactHours1" name="contactHours">
+    <p class="help-block"><i>If left blank this will be populated based on the selected type</i></p>
     </div>
 
 	<div class="form-group">

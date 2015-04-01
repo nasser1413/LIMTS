@@ -17,6 +17,12 @@
 
         <h1 id="semesters"></h1>
 
+        <label for="semester-selector" id="jump-label">Jump to:</label>
+        <select id="semester-selector">
+        </select>
+
+        <hr class="divider"></hr>
+
         <h2>Constraints:</h2>
         <ul id="constraints"></ul>
 
@@ -24,11 +30,3 @@
         <ul id="professors"></ul>
 
         <div id="footer">
-            <form class="form-inline">
-                <div class="form-group" style="float:right">
-                    <label for="semester-selector" id="jump-label">Jump to:</label>
-                    <select id="semester-selector" class="form-control">
-                    </select>
-                </div>
-            </form>
-        </div>

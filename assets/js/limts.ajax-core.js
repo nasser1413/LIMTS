@@ -1,4 +1,4 @@
-function loadSelector(type, handler, disableMultiselect, addBlank) {
+function loadSelector(type, handler, disableMultiselect, addBlank, inheritClass) {
    var url = "get_" + pluralize(type) + ".php";
    $.ajax({
         dataType: "json",
@@ -26,6 +26,7 @@ function loadSelector(type, handler, disableMultiselect, addBlank) {
                     buttonWidth: "100%",
                     maxHeight: 200,
                     disableIfEmpty: true,
+                    inheritClass: !!inheritClass,
                     onChange: handler
                 });
             } else {

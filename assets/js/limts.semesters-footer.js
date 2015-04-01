@@ -132,7 +132,7 @@ _SemestersFooter.prototype.initSelector = function() {
         $("#semester-selector").attr("multiple", "multiple");
     }
 
-    loadSelector("semester", this.semesterselected, this.mode === "checkboxes", this.mode === "checkboxes");
+    loadSelector("semester", this.semesterselected, this.mode === "checkboxes", this.mode === "checkboxes", true);
 }
 
 var SemestersFooter = new _SemestersFooter();
