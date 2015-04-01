@@ -106,11 +106,15 @@
 	</div>
 	
     <div class="form-group">
-    <label for="MaxCreditHours1">Max Credit Hours:</label>
-    <input type="text" class="form-control" id="MaxCreditHours1" name="MaxCreditHours">
+    <label for="maxCreditHours1">Max Credit Hours:</label>
+    <input type="text" class="form-control" id="maxCreditHours1" name="maxCreditHours">
     </div>
 	
-	
+    <div>
+    <label for="valpoId1">Valpraiso ID:</label>
+    <input type="text" class="form-control" id="valpoId1" name="valpoId">
+    </div>	
+
     <div class="form-group">
     <input type="submit" class="btn btn-default" value="Submit">
     </div>
