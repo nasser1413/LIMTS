@@ -1,10 +1,26 @@
-function loadSelector(type, handler, disableMultiselect, addBlank, inheritClass) {
+function loadSelector(type, handler, opts) {
+   // These are the default options
+   var options = {
+       multiselect: true,
+       addBlank: false,
+       inheritClass: true,
+       disableIfEmpty: true,
+       undisable: true,
+       offset: ""
+   };
+
+   // Extend the default options with our user-provided ones
+   $.each((opts || {}), function(key, value) {
+       options[key] = value;
+   });
+
+   // Pluralize the URL
    var url = "get_" + pluralize(type) + ".php";
    $.ajax({
         dataType: "json",
         url: url,
         success: function(data) {
-            var selector = $("#" + type + "-selector");
+            var selector = $("#" + type + "-selector" + options.offset);
             var filters = Filters.filters;
             $.each(data, function(i, object) {
                 var id = object.id,
@@ -17,16 +33,24 @@ function loadSelector(type, handler, disableMultiselect, addBlank, inheritClass)
                 );
             });
 
-            if (addBlank) {
+            if (options.offset) {
+                selector.attr("offset", options.offset)
+            }
+
+            if (options.addBlank) {
                 $("<option>", { value: '0', selected: true }).prependTo(selector);
             }
 
-            if (!disableMultiselect) {
+            if (options.undisable) {
+                selector.prop("disabled", false);
+            }
+
+            if (options.multiselect) {
                 selector.multiselect({
                     buttonWidth: "100%",
                     maxHeight: 200,
-                    disableIfEmpty: true,
-                    inheritClass: !!inheritClass,
+                    disableIfEmpty: options.disableIfEmpty,
+                    inheritClass: options.inheritClass,
                     onChange: handler
                 });
             } else {

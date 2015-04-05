@@ -1,7 +1,10 @@
 <script type="text/javascript">
 loadSelector("building", function() {
     alert("you selected something...");
-}, true, false);
+}, {
+    addBlank: true,
+    multiselect: false
+});
 </script>
 
 
