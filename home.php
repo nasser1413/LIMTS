@@ -9,7 +9,8 @@
         <link type="text/css" rel="stylesheet" href="//cdn.datatables.net/1.10.5/css/jquery.dataTables.min.css" />
 
         <script type="text/javascript">
-        var calendarView = getParameterByName("page") === "calendar";
+        var calendarView = getParameterByName("page") === "calendar",
+            firstPass;
 
         function onFiltersChanged(option, checked, select) {
             if (checked) {
@@ -29,8 +30,27 @@
             }
         }
 
+        function updateModal(sectionId) {
+            ajaxLoadJSON("section", function(i, section) {
+                $.each(section, function(key, value) {
+                    if (key !== "name") {
+                        $("#" + key + "-label")
+                            .empty()
+                            .append("<strong>"+key+"</strong>: " + value);
+                    } else {
+                        $("#section-label").text(value);
+                    }
+                });
+            }, {
+                id: sectionId
+            });
+        }
+
         if (calendarView) {
-            initCalendar();
+            initCalendar(function(calEvent, jsEvent, view) {
+                updateModal(calEvent.id);
+                $("#section-modal").modal("show");
+            });
             SemestersFooter.mode = "checkboxes";
             SemestersFooter.jumpto = function(date) {
                 $("#content").fullCalendar("gotoDate", date);
@@ -41,10 +61,12 @@
             });
         }
 
-        loadSelector("professor", onFiltersChanged);
-        loadSelector("class", onFiltersChanged);
-        loadRooms(onFiltersChanged, onHashChanged);
-        Filters.hashchange = onHashChanged;
+        $(function() {
+            loadSelector("professor", onFiltersChanged);
+            loadSelector("class", onFiltersChanged);
+            loadRooms(onFiltersChanged, onHashChanged);
+            Filters.hashchange = onHashChanged;
+        });
         </script>
 
         <div class="btn-group btn-group-justified" id="main-btn-group" role="group">
@@ -73,6 +95,33 @@
                     </select>
                 </div>
             </form>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="section-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="section-label"></h4>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row" id="professor-label"></div>
+                            <div class="row" id="capacity-label"></div>
+                            <div class="row" id="semester-label"></div>
+                            <div class="row" id="credit_hours-label"></div>
+                            <div class="row" id="rooms-label"></div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Edit</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <style>

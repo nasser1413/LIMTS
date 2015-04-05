@@ -39,6 +39,7 @@
           // Generate an event w/ the appropriate information
           $event = array();
           $event["title"] = $name;
+          $event["id"] = $section->database_id;
           $event["allDay"] = false;
           $event["start"] = date(DATE_ATOM, strtotime("-1 day", $time + $meeting_times[$day][0]));
           $event["end"] = date(DATE_ATOM, strtotime("-1 day", $time + $meeting_times[$day][1]));

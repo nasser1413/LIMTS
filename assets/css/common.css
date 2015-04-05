@@ -59,7 +59,7 @@ body {
     margin: 0 auto;
 }
 
-div.row {
+/*div.row {
     border: 1px solid #ccc;
     border-right: 0px;
     border-left: 0px;
@@ -74,7 +74,7 @@ div.row {
 }
 .container div.row:last-child {
     border-bottom: 1px solid #ccc;
-}
+}*/
 
 .vertical-align {
   position: relative;

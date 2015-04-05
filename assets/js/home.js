@@ -18,11 +18,21 @@ function loadRooms(onChange, onDone) {
                         if (rooms.length === 0) {
                             return;
                         }
-                        var optgroup = $("<optgroup label=\"" + building.description + "\"></optgroup>");
+                        
+                        var filters = Filters.filters,
+                            optgroup = $("<optgroup>")
+                                            .attr("label", building.description);
+
                         selector.append(optgroup);
 
                         $.each(rooms, function(i, room) {
-                            optgroup.append("<option value=\"" + room.id + "\" internal-type=\"room\">" + building.abbr + "-" + room.nmbr + "</option>");
+                            optgroup.append(
+                                    $("<option>")
+                                        .val(room.id)
+                                        .attr("internal-type", "room")
+                                        .prop("selected", $.inArray(room.id, filters.room) !== -1)
+                                        .append(building.abbr + "-" + room.nmbr)
+                            );
                         });
                     }
                  });
@@ -46,7 +56,7 @@ function loadRooms(onChange, onDone) {
     });
 }
 
-function initCalendar(semestersLoaded) {
+function initCalendar(eventClick) {
     $(function() {
         $("#content").fullCalendar({
             theme: true,
@@ -69,16 +79,10 @@ function initCalendar(semestersLoaded) {
                         if (JSON.stringify(SemestersFooter.activeSemesters) !== JSON.stringify(feed.semesters)) {
                             SemestersFooter.activeSemesters = feed.semesters;
                         }
-
-                        if (semestersLoaded) {
-                            semestersLoaded();
-                        }
                     }
                 });
             },
-            eventClick: function(calEvent, jsEvent, view) {
-                alert("Event: " + calEvent.title);
-            },
+            eventClick: eventClick,
             eventRender: function(event, element) {
                 element.css("cursor", "pointer");
             },
