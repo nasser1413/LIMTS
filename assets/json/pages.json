@@ -6,9 +6,14 @@
         {"name": "section", "title": "Section"},
         {"name": "class", "title": "Class"},
         {"name": "professor", "title": "Professor"},
+<<<<<<< .mine
+        {"name": "semester", "title": "Semester"},
+        {"name": "room", "title": "Room"}
+=======
         {"name": "semester", "title": "Semester"},
         {"name": "building", "title": "Building"},
         {"name": "room", "title": "Room"}
+>>>>>>> .r65
     ]},
     {"name": "about", "title": "About"}
 ]
