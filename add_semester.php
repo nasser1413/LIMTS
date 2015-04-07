@@ -32,8 +32,8 @@ function onFormSubmitted() {
             data: {
                 name: name,
                 type: type,
-                startdate: strd,
-                enddate: endd
+                startDate: strd,
+                endDate: endd
             },
             success: function(data) {
                 if (data.response !== "Success") {
@@ -54,7 +54,7 @@ $(function() {
     });
 
     $("#semester-type").change(function() {
-        var parent = $("#semester-tupe").parents(".form-group");
+        var parent = $("#semester-type").parents(".form-group");
         parent.removeClass("has-error");
         parent.addClass("has-success");
     });
