@@ -41,7 +41,7 @@
     // Everything seems ok at this point, so just add the Class
     //In Reality we'd also validate the dates to make sure EndDate > StartDate
     $result = $conn->query("INSERT INTO `Class` (Name, Title, CreditHours, ContactHours)
-                            VALUES('$name', '$title' , '$creditHours' , '$contacthours')");
+                            VALUES('$name', '$title' , '$credithours' , '$contacthours')");
     if (!$result) {
       die("{\"response\": \"Could not insert Class!\"}");
     }
