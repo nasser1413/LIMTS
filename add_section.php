@@ -2,17 +2,26 @@
             var modifiedCapacity = false,
                 meetingTimeRegex = /([A-Z]+) *(\d+:\d+[ap])-(\d+:\d+[ap])/,
                 rowId = 0,
-                rowTemplate;
+                rowTemplate,
+                editId = getParameterByName("edit"),
+                loadedSection;
 
             function onFormSubmitted() {
                 var section = { };
+
+                if (editId) {
+                    section.database_id = editId;
+                }
 
                 section.class = $("#class-selector option:selected").val();
                 section.professor = $("#professor-selector option:selected").val();
                 section.semester = $("#semester-selector option:selected").val();
 
-                section.max_capacity = $("#max-capacity").val();
-                if (!section.max_capacity) {
+                if (modifiedCapacity) {
+                    section.max_capacity = $("#max-capacity").val();
+                }
+
+                if (!$("#max-capacity").val()) {
                     $("#max-capacity").closest(".form-group").addClass("has-error");
                 }
 
@@ -71,9 +80,9 @@
             }
 
             function onRoomSelected() {
-                // TODO: I need to work on this logic :3
-                var room = $(this);
-                var selectedCapacity = room.find("option:selected").attr("_cap");
+                // TODO: We need to work on this logic!
+                var room = $(this).find("option:selected");
+                var selectedCapacity = room.attr("capacity");
 
                 var curVal = $("#max-capacity").val();
 
@@ -100,56 +109,36 @@
                 }
             }
 
-            function onBuildingSelected() {
-                var selector = $(this);
-                var offset = selector.attr("offset");
-                var selectedBuilding = selector.find("option:selected").val();
-                var roomSelector = $("#room-selector" + offset);
-                roomSelector.empty();
-
-                $.ajax({
-        		    dataType: "json",
-        		    url: "get_rooms.php",
-                    data: {
-                        building: selectedBuilding
-                    },
-                    success: function(data) {
-                        $.each(data, function(i, room) {
-                            var id = room.id,
-                            nmbr = room.nmbr,
-                            capacity = room.cap;
-                            roomSelector
-                                .append($("<option>", { _id : id, _cap : capacity })
-                                .text(nmbr));
-                        });
-
-                        if (data.length !== 0) {
-                            roomSelector.prop("disabled", false);
-                        } else {
-                            roomSelector.prop("disabled", true);
-                        }
-
-                        roomSelector.change(onRoomSelected);
-                        onRoomSelected.apply(roomSelector);
-                    }
-                });
-            }
-
-            function addRow() {
+            function addRow(room, meetingTime) {
                 var row = $(rowTemplate);
                 rowId++;
 
                 row.attr("id", "meeting-row" + rowId);
-                row.find("#building-selector").attr("id", "building-selector" + rowId);
-                row.find("#room-selector").attr("id", "room-selector" + rowId);
-                row.find("#meeting-time").attr("id", "meeting-time" + rowId).change(onMeetingTimeChanged);
-                row.find("#del-button").attr("id", "del-button" + rowId).click(removeRow);
+
+                row.find("#room-selector")
+                    .attr("id", "room-selector" + rowId);
+
+                row.find("#meeting-time")
+                    .attr("id", "meeting-time" + rowId)
+                    .change(onMeetingTimeChanged)
+                    .val(meetingTime);
+
+                row.find("#del-button")
+                    .attr("id", "del-button" + rowId)
+                    .click(removeRow);
 
                 $("#meeting-times").append(row);
 
-                loadSelector("building", onBuildingSelected, {
+                loadRooms(onRoomSelected, {
                     multiselect: false,
-                    offset: rowId
+                    offset: rowId,
+                    done: function() {
+                        $(this).find("option").filter(function() {
+                            return $(this).html() === room;
+                        }).prop("selected", true);
+
+                        onRoomSelected.apply(this);
+                    }
                 });
             }
 
@@ -175,18 +164,55 @@
                 }
             }
 
-            loadSelector("semester", undefined, {
-                multiselect: false
-            });
-            loadSelector("professor", undefined, {
-                multiselect: false
-            });
-            loadSelector("class", undefined, {
-                multiselect: false
-            });
-
             $(function() {
                 rowTemplate = $("#row-template").html();
+
+                loadSelector("semester", undefined, {
+                    multiselect: false
+                });
+                loadSelector("professor", undefined, {
+                    multiselect: false
+                });
+                loadSelector("class", undefined, {
+                    multiselect: false
+                });
+
+                if (editId) {
+                    $("#form-header").text("Edit Section");
+
+                    ajaxLoadJSON("section", function(i, section) {
+                        loadedSection = section;
+                        var splitName = loadedSection.name.split('-');
+                        var className = splitName[0] + '-' + splitName[1];
+
+                        $('#professor-selector option').filter(function() {
+                            return $(this).html() === loadedSection.professor;
+                        }).prop('selected', true);
+
+                        $('#semester-selector option').filter(function() {
+                            return $(this).html() === loadedSection.semester;
+                        }).prop('selected', true);
+
+                        $('#class-selector option').filter(function() {
+                            return $(this).html() === className;
+                        }).prop('selected', true);
+
+                        $('#identifier').val(splitName[2]);
+
+                        if (loadedSection.max_capacity) {
+                            $("#max-capacity").val(loadedSection.max_capacity);
+                            modifiedCapacity = true;
+                        }
+
+                        $.each(loadedSection.meeting_times, function(i, meetingTime) {
+                            addRow(loadedSection.rooms[i], meetingTime);
+                        });
+                    }, {
+                        id: [ editId ]
+                    });
+                } else {
+                    addRow();
+                }
 
                 $("#add-row").click(addRow);
                 $("#add-row").css("cursor", "pointer");
@@ -194,8 +220,6 @@
                 $("#max-capacity").change(onCapacityChanged);
 
                 $("#identifier").change(onIdentifierChanged);
-
-                addRow();
             });
         </script>
 
@@ -208,18 +232,13 @@
         </div>
 
         <script id="row-template" type="text/x-custom-template">
-            <tr id="meeting-row">
-                <td class="col-xs-2">
-                    <select class="form-control" id="building-selector" name="buildingName" disabled>
+            <tr id="meeting-row" style="width: 100%">
+                <td>
+                    <select class="form-control" id="room-selector" name="roomName">
                     </select>
                 </td>
 
-                <td class="col-xs-2">
-                    <select class="form-control" id="room-selector" name="roomName" disabled>
-                    </select>
-                </td>
-
-                <td class="col-xs-8">
+                <td>
                     <div class="input-group form-group" style="padding: 0px 0px; margin-bottom: 0px">
                         <input type="text" class="form-control" id="meeting-time" name="meetingTime" placeholder="MWF 9:00a-9:50a">
                         <span class="glyphicon glyphicon-remove input-group-addon" style="cursor: pointer;" id="del-button"></span>
@@ -228,7 +247,7 @@
             </tr>
         </script>
 
-        <h1>Add Section</h1>
+        <h1 id="form-header">Add Section</h1>
         <form action="javascript:onFormSubmitted()" id="mainForm">
             <div class="form-group">
             <label for="className1">Name:</label>
@@ -265,10 +284,8 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Building</th>
-                            <th>Room</th>
-                            <th>Meeting Time</th>
-                            <th><span class="glyphicon glyphicon-plus vertical-align" style="float: right;" id="add-row"></span></th>
+                            <th class="col-md-4">Room</th>
+                            <th class="col-md-8">Meeting Time <span class="glyphicon glyphicon-plus vertical-align" style="float: right;" id="add-row"></span></th>
                         </tr>
                     </thead>
 

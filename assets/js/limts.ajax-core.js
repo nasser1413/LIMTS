@@ -6,6 +6,7 @@ function loadSelector(type, handler, opts) {
        inheritClass: true,
        disableIfEmpty: true,
        undisable: true,
+       done: function() { },
        offset: ""
    };
 
@@ -56,6 +57,79 @@ function loadSelector(type, handler, opts) {
             } else {
                 selector.change(handler);
             }
+
+            options.done.apply(selector);
+        }
+    });
+}
+
+function loadRooms(onChange, opts) {
+    // These are the default options
+    var options = {
+        multiselect: true,
+        done: function() { },
+        offset: ""
+    };
+
+    // Extend the default options with our user-provided ones
+    $.each((opts || {}), function(key, value) {
+        options[key] = value;
+    });
+
+    $.ajax({
+        dataType: "json",
+        url: "get_buildings.php",
+        success: function(buildings) {
+            var selector = $("#room-selector" + options.offset);
+            var results = [];
+            $.each(buildings, function(i, building) {
+                var async = $.ajax({
+                    dataType: "json",
+                    url: "get_rooms.php",
+                    data: {
+                        building: building.id
+                    },
+                    success: function(rooms) {
+                        if (rooms.length === 0) {
+                            return;
+                        }
+
+                        var filters = Filters.filters,
+                            optgroup = $("<optgroup>")
+                                            .attr("label", building.description);
+
+                        selector.append(optgroup);
+
+                        $.each(rooms, function(i, room) {
+                            optgroup.append(
+                                    $("<option>")
+                                        .val(room.id)
+                                        .attr("internal-type", "room")
+                                        .attr("capacity", room.cap)
+                                        .prop("selected", $.inArray(room.id, filters.room) !== -1)
+                                        .append(building.abbr + "-" + room.nmbr)
+                            );
+                        });
+                    }
+                 });
+                results.push(async);
+            });
+
+            $.when.apply(this, results).done(function() {
+                if (options.multiselect) {
+                    selector.multiselect({
+                        buttonWidth: "100%",
+                        maxHeight: 200,
+                        enableClickableOptGroups: true,
+                        disableIfEmpty: true,
+                        onChange: onChange
+                    });
+                } else {
+                    selector.change(onChange);
+                }
+
+                options.done.apply(selector);
+            });
         }
     });
 }

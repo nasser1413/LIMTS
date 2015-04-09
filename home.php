@@ -31,6 +31,10 @@
         }
 
         function updateModal(sectionId) {
+            $("#edit-button").click(function() {
+                window.location.href='http://baker.valpo.edu/~jszaday/?page=add-section&edit='+sectionId+window.location.hash;
+            });
+
             ajaxLoadJSON("section", function(i, section) {
                 $.each(section, function(key, value) {
                     if (key !== "name") {
@@ -64,7 +68,9 @@
         $(function() {
             loadSelector("professor", onFiltersChanged);
             loadSelector("class", onFiltersChanged);
-            loadRooms(onFiltersChanged, onHashChanged);
+            loadRooms(onFiltersChanged, {
+                done: onHashChanged
+            });
             Filters.hashchange = onHashChanged;
         });
         </script>
@@ -118,7 +124,7 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Edit</button>
+                        <button type="button" class="btn btn-primary" id="edit-button">Edit</button>
                     </div>
                 </div>
             </div>
