@@ -51,11 +51,10 @@
 		$result = $conn->query("INSERT INTO `Section` (Identifier, Rooms, Semester, Class, Professor, MeetingTimes, WeekStyle, MaxCapacity)
 					VALUES('$identifier', '$rooms', '$semester', '$class', '$professor', '$meeting_times', '$week_style', $max_capacity)");
 	} else {
-		$query = "UPDATE `Professor`
+		$query = "UPDATE `Section`
 					SET Identifier='$identifier', Rooms='$rooms', Semester='$semester', Class='$class', Professor='$professor', MeetingTimes='$meeting_times', WeekStyle='$week_style', MaxCapacity='$max_capacity'
 					WHERE id=$database_id";
 		$result = $conn->query($query);
-		var_dump($query);
 	}
 
 	if (!$result) {

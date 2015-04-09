@@ -20,6 +20,7 @@ function initCalendar(eventClick) {
                     success: function(feed) {
                         callback(feed.events);
 
+                        // TODO: Fix this logic
                         if (JSON.stringify(SemestersFooter.activeSemesters) !== JSON.stringify(feed.semesters)) {
                             SemestersFooter.activeSemesters = feed.semesters;
                         }
@@ -37,7 +38,31 @@ function initCalendar(eventClick) {
 
 function updateCalendar(filters) {
     lastEventFilters = filters;
-    $("#content").fullCalendar("refetchEvents");
+
+    if (lastEventFilters.semester) {
+        var minDate = Infinity,
+            calDate;
+
+        var response = ajaxLoadJSON("semester", function(i, semester) {
+            if (semester.start < minDate)
+                minDate = semester.start;
+        }, {
+            id: lastEventFilters.semester
+        });
+        
+        $.when(response).done(function() {
+            minDate = moment.unix(minDate);
+            calDate = $("#content").fullCalendar("getDate");
+
+            if (!minDate.isSame(calDate)) {
+                $("#content").fullCalendar("gotoDate", minDate);
+            } else {
+                $("#content").fullCalendar("refetchEvents");
+            }
+        });
+    } else {
+        $("#content").fullCalendar("refetchEvents");
+    }
 }
 
 function initTable(filters) {

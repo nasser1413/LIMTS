@@ -46,7 +46,7 @@
                     }
 
                     section.meeting_times.push(meetingTime.val());
-                    section.rooms.push(room.attr("_id"));
+                    section.rooms.push(room.val());
                 }
                 section.meeting_times = JSON.stringify(section.meeting_times);
                 section.rooms = JSON.stringify(section.rooms);

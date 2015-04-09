@@ -7,8 +7,8 @@
         {"name": "class", "title": "Class"},
         {"name": "professor", "title": "Professor"},
         {"name": "semester", "title": "Semester"},
-        {"name": "room", "title": "Room"},
-	{"name": "building", "title": "Building"}
+        {"name": "building", "title": "Building"},
+        {"name": "room", "title": "Room"}
     ]},
     {"name": "about", "title": "About"}
 ]
