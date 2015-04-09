@@ -11,16 +11,15 @@ function onFormSubmitted() {
         if (!building) {
             $("#building-selector").parents(".form-group").addClass("has-error");
         }
-	 if (!number) {
+        if (!number) {
             $("#room-number").parents(".form-group").addClass("has-error");
         }
      	if (!capacity) {
             $("#maxCapacity1").parents(".form-group").addClass("has-error");
         }  
 
-  $("#warning-alert").offcanvas("show");
-
-}
+        $("#warning-alert").offcanvas("show");
+    }
 }
 $(function() {
 
