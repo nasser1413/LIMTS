@@ -1,7 +1,10 @@
 <script type="text/javascript">
 loadSelector("professortype", function() {
     alert("you selected something...");
-}, true, true);
+}, {
+    multiselect: false,
+    addBlank: true
+});
 </script>
 
 <h1>Add Professor</h1>
