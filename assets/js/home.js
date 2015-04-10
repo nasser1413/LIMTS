@@ -1,10 +1,11 @@
 var lastEventFilters = {};
 
 function initCalendar(eventClick) {
-    $(function() {
+    getSemesterStart(function(minDate) {
         $("#content").fullCalendar({
             theme: true,
             height: "auto",
+            defaultDate: minDate,
             header: {
                 left: "prev,next today",
                 center: "title",
@@ -39,29 +40,35 @@ function initCalendar(eventClick) {
 function updateCalendar(filters) {
     lastEventFilters = filters;
 
-    if (lastEventFilters.semester) {
-        var minDate = Infinity,
-            calDate;
+    getSemesterStart(function(minDate) {
+        if (minDate && !minDate.isSame(calDate)) {
+            $("#content").fullCalendar("gotoDate", minDate);
+        } else {
+            $("#content").fullCalendar("refetchEvents");
+        }
+    });
+}
+
+
+function getSemesterStart(done) {
+    var filters = Filters.filters.semester;
+
+    if (filters) {
+        var minDate = Infinity;
 
         var response = ajaxLoadJSON("semester", function(i, semester) {
             if (semester.start < minDate)
                 minDate = semester.start;
         }, {
-            id: lastEventFilters.semester
+            id: filters
         });
-        
+
         $.when(response).done(function() {
             minDate = moment.unix(minDate);
-            calDate = $("#content").fullCalendar("getDate");
-
-            if (!minDate.isSame(calDate)) {
-                $("#content").fullCalendar("gotoDate", minDate);
-            } else {
-                $("#content").fullCalendar("refetchEvents");
-            }
+            done(minDate);
         });
     } else {
-        $("#content").fullCalendar("refetchEvents");
+        done(undefined);
     }
 }
 
