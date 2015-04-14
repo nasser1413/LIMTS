@@ -7,7 +7,7 @@
                 loadedSection;
 
             function onFormSubmitted() {
-                var section = { };
+                var section = {};
 
                 if (editId) {
                     section.database_id = editId;
@@ -58,8 +58,8 @@
                         .offcanvas("show");
                 } else {
                     $.ajax({
-            		    dataType: "json",
-            		    url: "create_section.php",
+                        dataType: "json",
+                        url: "create_section.php",
                         data: section,
                         success: function(data) {
                             if (data.response !== "Success") {
@@ -182,22 +182,22 @@
 
                     ajaxLoadJSON("section", function(i, section) {
                         loadedSection = section;
-                        var splitName = loadedSection.name.split('-');
-                        var className = splitName[0] + '-' + splitName[1];
+                        var splitName = loadedSection.name.split("-");
+                        var className = splitName[0] + "-" + splitName[1];
 
-                        $('#professor-selector option').filter(function() {
+                        $("#professor-selector option").filter(function() {
                             return $(this).html() === loadedSection.professor;
-                        }).prop('selected', true);
+                        }).prop("selected", true);
 
-                        $('#semester-selector option').filter(function() {
+                        $("#semester-selector option").filter(function() {
                             return $(this).html() === loadedSection.semester;
-                        }).prop('selected', true);
+                        }).prop("selected", true);
 
-                        $('#class-selector option').filter(function() {
+                        $("#class-selector option").filter(function() {
                             return $(this).html() === className;
-                        }).prop('selected', true);
+                        }).prop("selected", true);
 
-                        $('#identifier').val(splitName[2]);
+                        $("#identifier").val(splitName[2]);
 
                         if (loadedSection.max_capacity) {
                             $("#max-capacity").val(loadedSection.max_capacity);
@@ -208,7 +208,7 @@
                             addRow(loadedSection.rooms[i], meetingTime);
                         });
                     }, {
-                        id: [ editId ]
+                        id: [editId]
                     });
                 } else {
                     addRow();
@@ -250,36 +250,29 @@
         <h1 id="form-header">Add Section</h1>
         <form action="javascript:onFormSubmitted()" id="mainForm">
             <div class="form-group">
-            <label for="className1">Name:</label>
-            <select class="form-control" id="class-selector" name="className" disabled>
-            </select>
+                <label for="className1">Name:</label>
+                <select class="form-control" id="class-selector" name="className" disabled>
+                </select>
             </div>
-
             <div class="form-group">
-            <label for="professorName1">Professor:</label>
-            <select class="form-control" id="professor-selector" name="professorName" disabled>
-
-            </select>
+                <label for="professorName1">Professor:</label>
+                <select class="form-control" id="professor-selector" name="professorName" disabled>
+                </select>
             </div>
-
             <div class="form-group">
-            <label for="semesterName1">Semester:</label>
-            <select class="form-control" id="semester-selector" name="semesterName" disabled>
-
-            </select>
+                <label for="semesterName1">Semester:</label>
+                <select class="form-control" id="semester-selector" name="semesterName" disabled>
+                </select>
             </div>
-
             <div class="form-group">
-            <label for="max-capacity">Max Capacity:</label>
-            <input type="text" class="form-control" id="max-capacity" name="maxCapacity">
-            <p class="help-block"><i>If left blank this will be populated based on the selected room(s)</i></p>
+                <label for="max-capacity">Max Capacity:</label>
+                <input type="text" class="form-control" id="max-capacity" name="maxCapacity">
+                <p class="help-block"><i>If left blank this will be populated based on the selected room(s)</i></p>
             </div>
-
             <div class="form-group">
-            <label for="classIdentifier1">Identifier:</label>
-            <input type="text" class="form-control" id="identifier" placeholder="A" name="classIdentifier">
+                <label for="classIdentifier1">Identifier:</label>
+                <input type="text" class="form-control" id="identifier" placeholder="A" name="classIdentifier">
             </div>
-
             <div class="form-group" style="margin-bottom: 5px;">
                 <table class="table table-striped">
                     <thead>
@@ -288,12 +281,10 @@
                             <th class="col-md-8">Meeting Time <span class="glyphicon glyphicon-plus vertical-align" style="float: right;" id="add-row"></span></th>
                         </tr>
                     </thead>
-
                     <tbody id="meeting-times"></tbody>
                 </table>
             </div>
-
             <div class="form-group">
-            <input type="submit" class="btn btn-default" value="Submit">
+                <input type="submit" class="btn btn-default" value="Submit">
             </div>
         </form>
