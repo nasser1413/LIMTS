@@ -18,7 +18,7 @@
 
 	// Check to make sure the required information is present
 	if (!($building && $number && $capacity)) {
-		die("You must specify the building, number and capacity!");
+		die("{\"response\": \"You must specify the building, number and capacity!\"}");
 	}
 	// Assume a default value for HandicapAccessible if it is null
 	if (!$handicap_accessible) {
@@ -29,15 +29,19 @@
 				FROM `Room`
 				WHERE `Building`='$building' AND 'Number'='$number'");
 	if ($result->num_rows > 0) {
-		die("Room already exists in database");
+		die("{\"response\": \"Room already exists in database\"}");
 	}
 	$result->close();
 	// Everything seems ok at this point, so just add the room
 	$result = $conn->query("INSERT INTO `Room` (Building, Number, Capacity, HandicapAccessible)
 				VALUES('$building', '$number', '$capacity', '$handicap_accessible')");
 	if (!$result) {
-		die("Could not insert Room!");
+		die("{\"response\": \"Could not insert Room!\"}");
 	}
+
+	 // Give a success response
+    	echo "{\"response\": \"Success\"}";
+
 	// Finally, close the connection
 	$conn->close();
 ?>
