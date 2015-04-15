@@ -25,8 +25,9 @@ function onFormSubmitted() {
             success: function(data) {
                 if (data.response !== "Success") {
                     alert(data.response);
-                } else {
-                    window.location.href = "?page=calendar" + location.hash;
+                } else {      
+				 	          
+			 $("#success-alert").offcanvas("show");			
                 }
             }
         });
@@ -51,6 +52,10 @@ $(function() {
 
 <div class="alert alert-danger alert-fixed-top offcanvas" id="warning-alert">
   <strong>Error!</strong> You must fill out the highlighted fields!
+</div>
+
+<div class="alert alert-success alert-fixed-top offcanvas" id="success-alert">
+  <strong>Success!</strong> You successfuly add a Building!
 </div>
 
 <h1>Add Building</h1>
