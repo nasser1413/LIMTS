@@ -1,11 +1,101 @@
 <script type="text/javascript">
-loadSelector("professortype", function() {
-    alert("you selected something...");
-}, {
-    multiselect: false,
-    addBlank: true
-});
+function onFormSubmitted() {
+    var name = $("#professorName1").val();
+    var ProfessorType = $("#professortype-selector option:selected").val();
+    var MaxCreditHours = $("#MaxCreditHours1").val();
+    var ValpoId = $("#valpoId1").val();
+  
+
+if (!name || !MaxCreditHours || !ProfessorType|| !ValpoId) {
+
+	if (!name) {
+            $("#professorName1").parents(".form-group").addClass("has-error");
+        }
+
+	if (!MaxCreditHours) {
+            $("#MaxCreditHours1").parents(".form-group").addClass("has-error");
+        }
+	if (!ProfessorType) {
+            $("#professortype-selector").parents(".form-group").addClass("has-error");
+        }
+	if (!ValpoId) {
+            $("#valpoId1").parents(".form-group").addClass("has-warning");
+		
+        }
+
+	 $("#warning-alert").offcanvas("show");
+
+	}else {
+	   $.ajax({
+	           dataType: "json",
+		   url: "create_professor.php",
+                 data: {
+              		  name: name,
+              		  MaxCreditHours: MaxCreditHours,
+			  ProfessorType:ProfessorType ,
+			  ValpoId:ValpoId
+            },
+	        success: function(data) {
+                  if (data.response !== "Success") {
+                         alert(data.response);	
+                } else {
+                      $("#success-alert").offcanvas("show");
+                }
+            }
+  }); // ajax 
+
+}// else 
+
+}// close Class On FormSubmitted 
+
+$(function() {
+	$("#professorName1").change(function() {
+        var parent = $("#professorName1").parents(".form-group");
+        parent.removeClass("has-error");
+        parent.addClass("has-success");
+    });
+	$("#MaxCreditHours1").change(function() {
+        var parent = $("#MaxCreditHours1").parents(".form-group");
+        parent.removeClass("has-error");
+        parent.addClass("has-success");
+    });
+	$("#valpoId1").change(function() {
+        var parent = $("#valpoId1").parents(".form-group");
+        parent.removeClass("has-warning");
+        parent.addClass("has-success");
+    });
+	
+	loadSelector("professortype", function() {
+		var selected = $("#professortype-selector option:selected").val();
+	    var parent = $("#professortype-selector").parents(".form-group");
+	
+		if (selected != 0) {
+		    parent.removeClass("has-error");
+		    parent.addClass("has-success");
+		} else {
+		    parent.addClass("has-error");
+		    parent.removeClass("has-success");
+		}
+	}, {
+	    multiselect: false,
+	    addBlank: true
+	}); // close loadSelector
+}); // close function 
 </script>
+
+
+<div class="alert alert-danger alert-fixed-top offcanvas" id="warning-alert">
+  <strong>Error!</strong> You must fill out the highlighted fields!
+</div>
+
+<div class="alert alert-warning alert-fixed-top offcanvas" id="warning-alert">
+  <strong>Warning!</strong> You have not add Valpo Id!
+</div>
+
+<div class="alert alert-success alert-fixed-top offcanvas" id="success-alert">
+  <strong>Success!</strong> You successfuly add a Professor!
+</div>
+
 
 <h1>Add Professor</h1>
 <form action="javascript:onFormSubmitted()" id="mainForm">
