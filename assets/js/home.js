@@ -2,38 +2,40 @@ var lastEventFilters = {};
 
 function initCalendar(eventClick) {
     getSemesterStart(function(minDate) {
-        $("#content").fullCalendar({
-            theme: true,
-            height: "auto",
-            defaultDate: minDate,
-            header: {
-                left: "prev,next today",
-                center: "title",
-                right: "month,agendaWeek,agendaDay"
-            },
-            events: function(start, end, timezone, callback) {
-                var data = $.extend({start: start.format(), end: end.format()}, lastEventFilters);
-                $.ajax({
-                    url: "sections_feed.php",
-                    cache: false,
-                    data: data,
-                    dataType: "json",
-                    success: function(feed) {
-                        callback(feed.events);
+        $(function() {
+            $("#content").fullCalendar({
+                theme: true,
+                height: "auto",
+                defaultDate: minDate,
+                header: {
+                    left: "prev,next today",
+                    center: "title",
+                    right: "month,agendaWeek,agendaDay"
+                },
+                events: function(start, end, timezone, callback) {
+                    var data = $.extend({start: start.format(), end: end.format()}, lastEventFilters);
+                    $.ajax({
+                        url: "sections_feed.php",
+                        cache: false,
+                        data: data,
+                        dataType: "json",
+                        success: function(feed) {
+                            callback(feed.events);
 
-                        // TODO: Fix this logic
-                        if (JSON.stringify(SemestersFooter.activeSemesters) !== JSON.stringify(feed.semesters)) {
-                            SemestersFooter.activeSemesters = feed.semesters;
+                            // TODO: Fix this logic
+                            if (JSON.stringify(SemestersFooter.activeSemesters) !== JSON.stringify(feed.semesters)) {
+                                SemestersFooter.activeSemesters = feed.semesters;
+                            }
                         }
-                    }
-                });
-            },
-            eventClick: eventClick,
-            eventRender: function(event, element) {
-                element.css("cursor", "pointer");
-            },
-            weekends: false
-        });
+                    });
+                },
+                eventClick: eventClick,
+                eventRender: function(event, element) {
+                    element.css("cursor", "pointer");
+                },
+                weekends: false
+            });
+        })
     });
 }
 
@@ -48,7 +50,6 @@ function updateCalendar(filters) {
         }
     });
 }
-
 
 function getSemesterStart(done) {
     var filters = Filters.filters.semester;
