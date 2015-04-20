@@ -10,5 +10,6 @@
         {"name": "building", "title": "Building"},
         {"name": "room", "title": "Room"}
     ]},
+    {"name": "manage", "title": "Manage"},
     {"name": "about", "title": "About"}
 ]
