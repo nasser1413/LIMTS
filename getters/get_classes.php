@@ -1,6 +1,6 @@
 <?php
 	// Import the "Grab Bag"
-	require_once "../dbconstants.php";
+	require("../common.php");
 
 	// Open an (OO) MySQL Connection
 	$conn = new mysqli($GLOBALS["dbhost"], $GLOBALS["dbuser"], $GLOBALS["dbpass"], $GLOBALS["dbname"]);
@@ -14,7 +14,13 @@
 			                FROM  `Class`;");
 	$classes = array();
 	while ($row = $result->fetch_row()) {
-		array_push($classes, array("id" => $row[CLASS_ID], "name" => $row[CLASS_NAME]));
+		array_push($classes, array(
+            "id" => $row[CLASS_ID],
+            "name" => $row[CLASS_NAME],
+            "credithours" => $row[CLASS_CREDITHOURS],
+            "contacthours" => $row[CLASS_CONTACTHOURS],
+            "title" => $row[CLASS_TITLE]
+        ));
 	}
     $result->close();
 
