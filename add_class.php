@@ -6,7 +6,7 @@ function onFormSubmitted() {
     var crdh = $("#credit-hours").val();
     var conth = $("#contact-hours").val();
 
-    
+
     if (!name || !title || !crdh) {
         if (!name) {
             $("#class-name").parents(".form-group").addClass("has-error");
@@ -19,12 +19,12 @@ function onFormSubmitted() {
         if (!crdh) {
             $("#credit-hours").parents(".form-group").addClass("has-error");
         }
-        
+
         $("#warning-alert").offcanvas("show");
     } else {
         $.ajax({
 		    dataType: "json",
-		    url: "create_class.php",
+		    url: "creators/create_class.php",
             data: {
                 name: name,
                 title: title,
@@ -54,7 +54,7 @@ $(function() {
         parent.removeClass("has-error");
         parent.addClass("has-success");
     });
-    
+
     $("#credit-hours").change(function() {
         var parent = $("#credit-hours").parents(".form-group");
         parent.removeClass("has-error");
@@ -93,4 +93,3 @@ $(function() {
     </div>
 
 </form>
-

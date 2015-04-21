@@ -10,12 +10,15 @@
 	// Get something of type $type with id $id
 	function get_x_with_id($conn, $type, $id) {
 		$result = $conn->query("SELECT *
-					FROM  `$type`
-					WHERE `id` =$id;");
-		$row = $result->fetch_row();
-		$result->close();
-
-		return $row;
+								FROM  `$type`
+								WHERE `id` =$id;");
+		if (!$result) {
+			return NULL;
+		} else {
+			$row = $result->fetch_row();
+			$result->close();
+			return $row;
+		}
 	}
 
 	function get_all_x_with_query($conn, $x, $query, $desired_field = -1) {
@@ -30,7 +33,7 @@
 				array_push($sections, $row);
 			}
 		}
-		$result->close;
+		$result->close();
 		return $sections;
 	}
 

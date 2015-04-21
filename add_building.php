@@ -17,7 +17,7 @@ function onFormSubmitted() {
     } else {
         $.ajax({
 		    dataType: "json",
-		    url: "create_building.php",
+		    url: "creators/create_building.php",
             data: {
                 name: name,
                 abbreviation: abbr
@@ -25,9 +25,9 @@ function onFormSubmitted() {
             success: function(data) {
                 if (data.response !== "Success") {
                     alert(data.response);
-                } else {      
-				 	          
-			 $("#success-alert").offcanvas("show");			
+                } else {
+
+			 $("#success-alert").offcanvas("show");
                 }
             }
         });

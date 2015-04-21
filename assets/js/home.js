@@ -1,4 +1,5 @@
-var lastEventFilters = {};
+var lastEventFilters = {},
+    firstLoad = true;
 
 function initCalendar(eventClick) {
     getSemesterStart(function(minDate) {
@@ -15,7 +16,7 @@ function initCalendar(eventClick) {
                 events: function(start, end, timezone, callback) {
                     var data = $.extend({start: start.format(), end: end.format()}, lastEventFilters);
                     $.ajax({
-                        url: "sections_feed.php",
+                        url: "getters/sections_feed.php",
                         cache: false,
                         data: data,
                         dataType: "json",
@@ -42,12 +43,14 @@ function initCalendar(eventClick) {
 function updateCalendar(filters) {
     lastEventFilters = filters;
 
+    var calDate = $("#content").fullCalendar("getDate");
     getSemesterStart(function(minDate) {
-        if (minDate && !minDate.isSame(calDate)) {
+        if (firstLoad && minDate && !minDate.isSame(calDate)) {
             $("#content").fullCalendar("gotoDate", minDate);
         } else {
             $("#content").fullCalendar("refetchEvents");
         }
+        firstLoad = false;
     });
 }
 
@@ -76,7 +79,7 @@ function getSemesterStart(done) {
 function initTable(filters) {
     $.ajax({
         dataType: "json",
-        url: "table_feed.php",
+        url: "getters/table_feed.php",
         data: filters,
         success: function(data) {
             // Instanstiate a new TableBuilder

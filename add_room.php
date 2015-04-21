@@ -23,7 +23,7 @@ function onFormSubmitted() {
     } else {
 		$.ajax({
 			dataType: "json",
-			url: "create_room.php",
+			url: "creators/create_room.php",
 			data: {
 				handicapAccessible: handicap_accessible,
 				capacity: capacity,

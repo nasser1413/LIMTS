@@ -35,7 +35,7 @@ function _SemestersFooter() {
                     if (this._jumpto) {
                         this._jumpto(date);
                     }
-                }
+                };
             } else {
                 return undefined;
             }

@@ -5,14 +5,15 @@
         var keys = [];
 
         var response = ajaxLoadJSON(type, function(i, obj) {
-            var row = $("<tr>").attr("id", type + obj.id);
+            var id = (obj.id || obj.database_id),
+                row = $("<tr>").attr("id", type + id);
 
             if (Object.keys(obj).length > keys.length) {
                 keys = Object.keys(obj)
             }
 
             $.each(obj, function(key, value) {
-                if (key === "id") {
+                if (key === "id" || key == "database_id") {
                     return;
                 }
 
@@ -28,7 +29,7 @@
                     $("<a>").append(
                         $("<span>")
                             .addClass("glyphicon glyphicon-edit")
-                    ).attr("href", "?page=add-"+type+"&edit="+obj.id)
+                    ).attr("href", "?page=add-"+type+"&edit="+id)
                 )
             );
 
@@ -37,7 +38,7 @@
                     $("<a>").append(
                         $("<span>")
                             .addClass("glyphicon glyphicon-remove")
-                    ).attr("href", "?page=remove-"+type+"&id="+obj.id)
+                    ).attr("href", "?page=remove-"+type+"&id="+id)
                 )
             );
 
@@ -46,7 +47,7 @@
 
         $.when(response).done(function() {
             $.each(keys, function(i, key) {
-                if (key === "id") {
+                if (key === "id" || key == "database_id") {
                     return;
                 }
 

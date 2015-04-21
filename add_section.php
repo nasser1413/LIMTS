@@ -59,7 +59,7 @@
                 } else {
                     $.ajax({
                         dataType: "json",
-                        url: "create_section.php",
+                        url: "creators/create_section.php",
                         data: section,
                         success: function(data) {
                             if (data.response !== "Success") {

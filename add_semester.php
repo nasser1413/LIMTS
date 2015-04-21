@@ -27,7 +27,7 @@ function onFormSubmitted() {
     } else {
         $.ajax({
 		    dataType: "json",
-		    url: "create_semester.php",
+		    url: "creators/create_semester.php",
             data: {
                 name: name,
                 type: type,

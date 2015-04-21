@@ -4,7 +4,7 @@ function onFormSubmitted() {
     var ProfessorType = $("#professortype-selector option:selected").val();
     var MaxCreditHours = $("#MaxCreditHours1").val();
     var ValpoId = $("#valpoId1").val();
-  
+
 
 if (!name || !MaxCreditHours || !ProfessorType|| !ValpoId) {
 
@@ -20,7 +20,7 @@ if (!name || !MaxCreditHours || !ProfessorType|| !ValpoId) {
         }
 	if (!ValpoId) {
             $("#valpoId1").parents(".form-group").addClass("has-warning");
-		
+
         }
 
 	 $("#warning-alert").offcanvas("show");
@@ -28,7 +28,7 @@ if (!name || !MaxCreditHours || !ProfessorType|| !ValpoId) {
 	}else {
 	   $.ajax({
 	           dataType: "json",
-		   url: "create_professor.php",
+		   url: "creators/create_professor.php",
                  data: {
               		  name: name,
               		  MaxCreditHours: MaxCreditHours,
@@ -37,16 +37,16 @@ if (!name || !MaxCreditHours || !ProfessorType|| !ValpoId) {
             },
 	        success: function(data) {
                   if (data.response !== "Success") {
-                         alert(data.response);	
+                         alert(data.response);
                 } else {
                       $("#success-alert").offcanvas("show");
                 }
             }
-  }); // ajax 
+  }); // ajax
 
-}// else 
+}// else
 
-}// close Class On FormSubmitted 
+}// close Class On FormSubmitted
 
 $(function() {
 	$("#professorName1").change(function() {
@@ -64,11 +64,11 @@ $(function() {
         parent.removeClass("has-warning");
         parent.addClass("has-success");
     });
-	
+
 	loadSelector("professortype", function() {
 		var selected = $("#professortype-selector option:selected").val();
 	    var parent = $("#professortype-selector").parents(".form-group");
-	
+
 		if (selected != 0) {
 		    parent.removeClass("has-error");
 		    parent.addClass("has-success");
@@ -80,7 +80,7 @@ $(function() {
 	    multiselect: false,
 	    addBlank: true
 	}); // close loadSelector
-}); // close function 
+}); // close function
 </script>
 
 

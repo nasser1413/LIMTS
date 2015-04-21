@@ -16,7 +16,7 @@ function loadSelector(type, handler, opts) {
    });
 
    // Pluralize the URL
-   var url = "get_" + pluralize(type) + ".php";
+   var url = "getters/get_" + pluralize(type) + ".php";
    $.ajax({
         dataType: "json",
         url: url,
@@ -78,14 +78,14 @@ function loadRooms(onChange, opts) {
 
     $.ajax({
         dataType: "json",
-        url: "get_buildings.php",
+        url: "getters/get_buildings.php",
         success: function(buildings) {
             var selector = $("#room-selector" + options.offset);
             var results = [];
             $.each(buildings, function(i, building) {
                 var async = $.ajax({
                     dataType: "json",
-                    url: "get_rooms.php",
+                    url: "getters/get_rooms.php",
                     data: {
                         building: building.id
                     },
@@ -137,7 +137,7 @@ function loadRooms(onChange, opts) {
 function ajaxLoadJSON(type, handler, data) {
     return $.ajax({
         dataType: "json",
-        url: "get_" + pluralize(type) + ".php",
+        url: "getters/get_" + pluralize(type) + ".php",
         data: data,
         success: function(objects) {
             if (objects.length) {
