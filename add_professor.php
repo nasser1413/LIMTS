@@ -1,10 +1,13 @@
 <script type="text/javascript">
+var editId = getParameterByName("edit"),
+    loadedProfessor;    
+    
 function onFormSubmitted() {
     var name = $("#professorName1").val();
     var ProfessorType = $("#professortype-selector option:selected").val();
     var MaxCreditHours = $("#MaxCreditHours1").val();
     var ValpoId = $("#valpoId1").val();
-
+  
 
 if (!name || !MaxCreditHours || !ProfessorType|| !ValpoId) {
 
@@ -20,7 +23,7 @@ if (!name || !MaxCreditHours || !ProfessorType|| !ValpoId) {
         }
 	if (!ValpoId) {
             $("#valpoId1").parents(".form-group").addClass("has-warning");
-
+		
         }
 
 	 $("#warning-alert").offcanvas("show");
@@ -28,7 +31,7 @@ if (!name || !MaxCreditHours || !ProfessorType|| !ValpoId) {
 	}else {
 	   $.ajax({
 	           dataType: "json",
-		   url: "creators/create_professor.php",
+		   url: "create_professor.php",
                  data: {
               		  name: name,
               		  MaxCreditHours: MaxCreditHours,
@@ -37,18 +40,31 @@ if (!name || !MaxCreditHours || !ProfessorType|| !ValpoId) {
             },
 	        success: function(data) {
                   if (data.response !== "Success") {
-                         alert(data.response);
+                         alert(data.response);	
                 } else {
                       $("#success-alert").offcanvas("show");
                 }
             }
-  }); // ajax
+  }); // ajax 
 
-}// else
+}// else 
 
-}// close Class On FormSubmitted
+}// close Class On FormSubmitted 
 
 $(function() {
+        // If "edit", load the existing data
+    if (editId) {
+       $("#form-header").text("Edit Professor");
+       ajaxLoadJSON("professor", function(i, professor) {
+           loadedProfessor = professor;
+           $("#professor-name").val(professor.name);
+           $("#professortype-selector").val(professor.professor_type);
+           $("#max-credit-hours").val(professor.max_credit_hours);
+           $("#valpo-id").val(professor.valpo_id);
+       });
+    }
+    
+    
 	$("#professorName1").change(function() {
         var parent = $("#professorName1").parents(".form-group");
         parent.removeClass("has-error");
@@ -64,11 +80,11 @@ $(function() {
         parent.removeClass("has-warning");
         parent.addClass("has-success");
     });
-
+	
 	loadSelector("professortype", function() {
 		var selected = $("#professortype-selector option:selected").val();
 	    var parent = $("#professortype-selector").parents(".form-group");
-
+	
 		if (selected != 0) {
 		    parent.removeClass("has-error");
 		    parent.addClass("has-success");
@@ -80,7 +96,7 @@ $(function() {
 	    multiselect: false,
 	    addBlank: true
 	}); // close loadSelector
-}); // close function
+}); // close function 
 </script>
 
 
@@ -97,12 +113,12 @@ $(function() {
 </div>
 
 
-<h1>Add Professor</h1>
+<h1 id="form-header">Add Professor</h1>
 <form action="javascript:onFormSubmitted()" id="mainForm">
 
     <div class="form-group">
     <label for="professorName1">Professor Name:</label>
-    <input type="text" class="form-control" id="professorName1" name="professorName">
+    <input type="text" class="form-control" id="professor-name" name="professorName">
     </div>
 
     <div class="form-group">
@@ -113,13 +129,13 @@ $(function() {
 
     <div class="form-group">
     <label for="MaxCreditHours1">Max Credit Hours:</label>
-    <input type="text" class="form-control" id="MaxCreditHours1" name="MaxCreditHours">
+    <input type="text" class="form-control" id="max-credit-hours" name="MaxCreditHours">
     <p class="help-block"><i>If left blank this will be populated based on the selected type</i></p>
     </div>
 
 	<div class="form-group">
     <label for="valpoId1">Valparaiso ID:</label>
-    <input type="text" class="form-control" id="valpoId1" name="valpoId">
+    <input type="text" class="form-control" id="valpo-id" name="valpoId">
     </div>
 
     <div class="form-group">
@@ -127,3 +143,4 @@ $(function() {
     </div>
 
 </form>
+
