@@ -28,7 +28,7 @@
 		$building = get_x_with_id($conn, "Building", $row[ROOM_BLDG]);
 		$name = $building[BUILDING_ABRV] . "-" . $row[ROOM_NMBR];
 
-		array_push($rooms, array("id" => $row[ROOM_ID], "name" => $name, "nmbr" => $row[ROOM_NMBR], "cap" => $row[ROOM_CAP]));
+		array_push($rooms, array("id" => $row[ROOM_ID], "name" => $name, "nmbr" => $row[ROOM_NMBR], "cap" => $row[ROOM_CAP],"handicap_accessible" => $row[HANDICAP_ACCESSIBLE]));
 	}
     $result->close();
 
