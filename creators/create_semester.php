@@ -13,29 +13,37 @@
     // Get all of the "Parameters"
     $name = $_GET["name"];
     $type = $_GET["type"];
-    $startDate = $_GET["startDate"];
-    $endDate = $_GET["endDate"];
+    $start_date = $_GET["start_date"];
+    $end_date = $_GET["end_date"];
+    $database_id = $_GET["database_id"];
 
     // Check to make sure the required information is present
-    if (!($name && $type && $startDate && $endDate)) {
+    if (!($name && $type && $start_date && $end_date)) {
       die("{\"response\": \"You must specify the all the information!\"}");
     }
 
-    // Check to see if the Building already exists in the database
-    $result = $conn->query("SELECT *
-                            FROM `Semester`
-                            WHERE `Name`='$name'");
-    if ($result->num_rows > 0) {
-      die("{\"response\": \"Building already exists in database\"}");
-    }
-    $result->close();
+    if (!$database_id) {
+        // Check to see if the Building already exists in the database
+        $result = $conn->query("SELECT *
+                                FROM `Semester`
+                                WHERE `Name`='$name'");
+        if ($result->num_rows > 0) {
+          die("{\"response\": \"Semester already exists in database\"}");
+        }
+        $result->close();
 
-    // Everything seems ok at this point, so just add the Semester
-    //In Reality we'd also validate the dates to make sure EndDate > StartDate
-    $result = $conn->query("INSERT INTO `Semester` (Name, Type, StartDate, EndDate)
-                            VALUES('$name', '$type' , '$startDate' , '$endDate')");
+        // Everything seems ok at this point, so just add the Semester
+        //In Reality we'd also validate the dates to make sure EndDate > StartDate
+        $result = $conn->query("INSERT INTO `Semester` (Name, Type, StartDate, EndDate)
+                                VALUES('$name', '$type' , '$start_date' , '$end_date')");
+    } else {
+        $result = $conn->query("UPDATE `Semester`
+                                SET `Name`='$name', `Type`='$type', `StartDate`='$start_date', `EndDate`='$end_date'
+                                WHERE id=$database_id");
+    }
+
     if (!$result) {
-      die("{\"response\": \"Could not insert Semester!\"}");
+        die("{\"response\": \"Could not insert Semester!\"}");
     }
 
     // Give a success response

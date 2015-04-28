@@ -28,7 +28,7 @@
 
 		array_push($semesters, array(   "id" => $row[SEMESTER_ID],
                                         "name" => $row[SEMESTER_NAME],
-					"type" => $row[TYPE],
+                                        "type" => $row[SEMESTER_TYPE],
                                         "start" => $semester_start,
                                         "end" => $semester_end ));
 	}

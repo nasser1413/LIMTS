@@ -29,12 +29,13 @@ function onFormSubmitted() {
     } else {
         $.ajax({
 		    dataType: "json",
-		    url: "create_semester.php",
+		    url: "creators/create_semester.php",
             data: {
                 name: name,
                 type: type,
-                startDate: strd,
-                endDate: endd
+                start_date: strd,
+                end_date: endd,
+                database_id: editId
             },
             success: function(data) {
                 if (data.response !== "Success") {
@@ -48,16 +49,19 @@ function onFormSubmitted() {
 }
 
 $(function() {
-        // If "edit", load the existing data
+    // If "edit", load the existing data
     if (editId) {
-       $("#form-header").text("Edit Semester");
-       ajaxLoadJSON("semester", function(i, semester) {
-           loadedSemester = semester;
-           $("#semester-name").val(semester.name);
-           $("#semester-type").val(semester.type);
-           $("#start-date").val(semester.start);
-           $("#end-date").val(semester.end);
-       });
+        $("#form-header").text("Edit Semester");
+
+        ajaxLoadJSON("semester", function(i, semester) {
+            loadedSemester = semester;
+            $("#semester-name").val(semester.name);
+            $("#semester-type").val(semester.type);
+            $("#start-date").val(moment.unix(semester.start).format("YYYY-MM-DD"));
+            $("#end-date").val(moment.unix(semester.end).format("YYYY-MM-DD"));
+        }, {
+            id: editId
+        });
     }
     
     $("#semester-name").change(function() {
@@ -103,12 +107,12 @@ $(function() {
 
     <div class="form-group">
     <label for="startDate1">Start Date:</label>
-    <input type="text" class="form-control" id="start-date" placeholder="d/m/y" name="startDate">
+    <input type="date" class="form-control" id="start-date" name="startDate">
     </div>
 
     <div class="form-group">
     <label for="startDate1">End Date:</label>
-    <input type="text" class="form-control" id="end-date" placeholder="d/m/y" name="endDate">
+    <input type="date" class="form-control" id="end-date" name="endDate">
     </div>
 
     <div class="form-group">
