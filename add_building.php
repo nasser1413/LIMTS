@@ -19,17 +19,17 @@ function onFormSubmitted() {
     } else {
         $.ajax({
 		    dataType: "json",
-		    url: "create_building.php",
+		    url: "creators/create_building.php",
             data: {
                 name: name,
-                abbreviation: abbr
+                abbreviation: abbr,
+                database_id: editId
             },
             success: function(data) {
                 if (data.response !== "Success") {
                     alert(data.response);
-                } else {      
-				 	          
-			 $("#success-alert").offcanvas("show");			
+                } else {
+				 	$("#success-alert").offcanvas("show");
                 }
             }
         });
@@ -38,18 +38,18 @@ function onFormSubmitted() {
  
     
 $(function() {
-    
     // If "edit", load the existing data
     if (editId) {
-       $("#form-header").text("Edit Building");
-       ajaxLoadJSON("building", function(i, building) {
-           loadedBuilding = building;
-           $("#building-name").val(building.description);
-           $("#building-abbreviation").val(building.abbr);
-       });
+        $("#form-header").text("Edit Building");
+        ajaxLoadJSON("building", function(i, building) {
+            loadedBuilding = building;
+            $("#building-name").val(building.description);
+            $("#building-abbreviation").val(building.abbr);
+        }, {
+            id: editId
+        });
     }
 
-    
     //Remove textbox error message  
     $("#building-name").change(function() {
         var parent = $("#building-name").parents(".form-group");

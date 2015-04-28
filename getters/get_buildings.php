@@ -10,8 +10,15 @@
 		die("Connection failed: " . $conn->connect_error);
 	}
 
-	$result = $conn->query("SELECT *
-			                FROM  `Building`;");
+    $query = "SELECT *
+			  FROM  `Building`";
+
+    $id = $_GET["id"];
+    if ($id) {
+        $query .= PHP_EOL . "WHERE Id = $id";
+    }
+
+	$result = $conn->query($query);
 	$buildings = array();
 	while ($row = $result->fetch_row()) {
 		array_push($buildings, array("id" => $row[BUILDING_ID], "abbr" => $row[BUILDING_ABRV], "description" => $row[BUILDING_DESC]));
