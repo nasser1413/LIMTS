@@ -10,8 +10,15 @@
 		die("Connection failed: " . $conn->connect_error);
 	}
 
-	$result = $conn->query("SELECT *
-			                FROM  `Class`;");
+    $query = "SELECT *
+			  FROM  `Class`";
+
+    $id = $_GET["id"];
+    if ($id) {
+        $query .= PHP_EOL . "WHERE Id = $id";
+    }
+
+	$result = $conn->query($query);
 	$classes = array();
 	while ($row = $result->fetch_row()) {
 		array_push($classes, array(

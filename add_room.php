@@ -1,5 +1,7 @@
 <script type="text/javascript">
-
+var editId = getParameterByName("edit"),
+    loadedRoom;
+    
 function onFormSubmitted() {
 	var building = $("#building-selector option:selected").val();
 	var number = $("#room-number").val();
@@ -23,7 +25,7 @@ function onFormSubmitted() {
     } else {
 		$.ajax({
 			dataType: "json",
-			url: "creators/create_room.php",
+			url: "create_room.php",
 			data: {
 				handicapAccessible: handicap_accessible,
 				capacity: capacity,
@@ -42,6 +44,18 @@ function onFormSubmitted() {
 }
 
 $(function() {
+       // If "edit", load the existing data
+    if (editId) {
+       $("#form-header").text("Edit Room");
+       ajaxLoadJSON("room", function(i, room) {
+           loadedRoom = room;
+           $("#building-selector").val(room.name);
+           $("#room-number").val(room.nmbr);
+           $("#max-capacity").val(room.cap);
+           $("#handicap-accessible").val(room.handicap_accessible);
+       });
+    }
+    
  	$("#building-selector option:selected").change(function() {
         var parent = $("#building-selector").parents(".form-group");
         parent.removeClass("has-error");
@@ -76,7 +90,7 @@ $(function() {
 	<strong>Error!</strong> You must fill out the highlighted fields!
 </div>
 
-<h1>Add Room</h1>
+<h1 id="form-header">Add Room</h1>
 <form action="javascript:onFormSubmitted()" id="mainForm">
 
     <div class="form-group">

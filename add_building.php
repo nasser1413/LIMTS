@@ -1,9 +1,11 @@
 <script type="text/javascript">
+var editId = getParameterByName("edit"),
+    loadedBuilding;
 
 function onFormSubmitted() {
-    var name = $("#building-name").val();
-    var abbr = $("#building-abbreviation").val();
-
+    var name = $("#building-name").val(),
+        abbr = $("#building-abbreviation").val();
+    
     if (!name || !abbr) {
         if (!name) {
             $("#building-name").parents(".form-group").addClass("has-error");
@@ -17,7 +19,7 @@ function onFormSubmitted() {
     } else {
         $.ajax({
 		    dataType: "json",
-		    url: "creators/create_building.php",
+		    url: "create_building.php",
             data: {
                 name: name,
                 abbreviation: abbr
@@ -25,16 +27,30 @@ function onFormSubmitted() {
             success: function(data) {
                 if (data.response !== "Success") {
                     alert(data.response);
-                } else {
-
-			 $("#success-alert").offcanvas("show");
+                } else {      
+				 	          
+			 $("#success-alert").offcanvas("show");			
                 }
             }
         });
     }
 }
-
+ 
+    
 $(function() {
+    
+    // If "edit", load the existing data
+    if (editId) {
+       $("#form-header").text("Edit Building");
+       ajaxLoadJSON("building", function(i, building) {
+           loadedBuilding = building;
+           $("#building-name").val(building.description);
+           $("#building-abbreviation").val(building.abbr);
+       });
+    }
+
+    
+    //Remove textbox error message  
     $("#building-name").change(function() {
         var parent = $("#building-name").parents(".form-group");
         parent.removeClass("has-error");
@@ -58,7 +74,7 @@ $(function() {
   <strong>Success!</strong> You successfuly add a Building!
 </div>
 
-<h1>Add Building</h1>
+<h1 id="form-header">Add Building</h1>
 <form action="javascript:onFormSubmitted()" id="mainForm">
 
     <div class="form-group">

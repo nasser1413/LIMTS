@@ -1,5 +1,7 @@
 <script type="text/javascript">
-
+var editId = getParameterByName("edit"),
+    loadedSemester;
+    
 function onFormSubmitted() {
     var name = $("#semester-name").val();
     var type = $("#semester-type").val();
@@ -27,7 +29,7 @@ function onFormSubmitted() {
     } else {
         $.ajax({
 		    dataType: "json",
-		    url: "creators/create_semester.php",
+		    url: "create_semester.php",
             data: {
                 name: name,
                 type: type,
@@ -46,6 +48,18 @@ function onFormSubmitted() {
 }
 
 $(function() {
+        // If "edit", load the existing data
+    if (editId) {
+       $("#form-header").text("Edit Semester");
+       ajaxLoadJSON("semester", function(i, semester) {
+           loadedSemester = semester;
+           $("#semester-name").val(semester.name);
+           $("#semester-type").val(semester.type);
+           $("#start-date").val(semester.start);
+           $("#end-date").val(semester.end);
+       });
+    }
+    
     $("#semester-name").change(function() {
         var parent = $("#semester-name").parents(".form-group");
         parent.removeClass("has-error");
@@ -73,7 +87,7 @@ $(function() {
 
 </script>
 
-<h1>Add Semester</h1>
+<h1 id="form-header">Add Semester</h1>
 <form action="javascript:onFormSubmitted()" id="mainForm">
 
     <div class="form-group">

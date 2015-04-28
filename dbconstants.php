@@ -56,7 +56,8 @@
  	// Class Information
  	define("CLASS_ID", 0);
  	define("CLASS_NAME", 1);
- 	define("CLASS_CRHR", 2);
+ 	define("CLASS_CREDITHOURS", 2);
+ 	define("CLASS_CONTACTHOURS", 3);
  	define("CLASS_TITLE", 4);
 
  	// Semester Information
