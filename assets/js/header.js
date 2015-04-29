@@ -1,8 +1,9 @@
 var pagesLocation = "assets/json/pages.json";
 
-function onNavLinkClicked() {
-    var name = $(this).attr("name");
-    window.location.href = "?page=" + name + location.hash;
+function onNavLinkHover() {
+    var link = $(this),
+        name = link.attr("name");
+    link.attr("href", "?page=" + name + location.hash);
 }
 
 function onHeaderPagesLoaded(pages) {
@@ -20,7 +21,7 @@ function onHeaderPagesLoaded(pages) {
                             subPage.title
                         ).attr("name", page.name + "-" + subPage.name)
                         .css("cursor", "pointer")
-                        .click(onNavLinkClicked)
+                        .hover(onNavLinkHover)
                     )
                 );
             });
@@ -38,7 +39,7 @@ function onHeaderPagesLoaded(pages) {
                         page.title
                     ).attr("name", page.name)
                     .css("cursor", "pointer")
-                    .click(onNavLinkClicked)
+                    .hover(onNavLinkHover)
                 )
             );
         }
