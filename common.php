@@ -123,7 +123,7 @@
 
 			$section->database_id = $db_row[SECTION_DBID];
 			$section->name = $class[CLASS_NAME] . "-" . $db_row[SECTION_ID];
-			$section->credit_hours = $class[CLASS_CRHR];
+			$section->credit_hours = $class[CLASS_CREDITHOURS];
 			$section->title = $class[CLASS_TITLE];
 			$section->semester = $semester[SEMESTER_NAME];
 			$section->week_style = $db_row[SECTION_WEEKS];
