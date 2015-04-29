@@ -92,6 +92,7 @@
                 <li role="presentation"><a role="menuitem" tabindex="-1" href="?page=manage&type=section">Section</a></li>
                 <li role="presentation"><a role="menuitem" tabindex="-1" href="?page=manage&type=class">Class</a></li>
                 <li role="presentation"><a role="menuitem" tabindex="-1" href="?page=manage&type=professor">Professor</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="?page=manage&type=professortype">Professor Type</a></li>
                 <li role="presentation"><a role="menuitem" tabindex="-1" href="?page=manage&type=semester">Semester</a></li>
                 <li role="presentation"><a role="menuitem" tabindex="-1" href="?page=manage&type=building">Building</a></li>
                 <li role="presentation"><a role="menuitem" tabindex="-1" href="?page=manage&type=room">Room</a></li>

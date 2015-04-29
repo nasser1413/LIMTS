@@ -6,6 +6,7 @@
         {"name": "section", "title": "Section"},
         {"name": "class", "title": "Class"},
         {"name": "professor", "title": "Professor"},
+        {"name": "professortype", "title": "Professor Type"},
         {"name": "semester", "title": "Semester"},
         {"name": "building", "title": "Building"},
         {"name": "room", "title": "Room"}

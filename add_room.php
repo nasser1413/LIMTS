@@ -1,9 +1,9 @@
 <script type="text/javascript">
 var editId = getParameterByName("edit"),
     loadedRoom;
-    
+
 function onFormSubmitted() {
-	var building = $("#building-selector option:selected").val();
+	var building = parseInt($("#building-selector option:selected").val());
 	var number = $("#room-number").val();
 	var capacity = $("#max-capacity").val();
 	var handicap_accessible = $("#handicap-accessible").is(':checked');
@@ -25,12 +25,13 @@ function onFormSubmitted() {
     } else {
 		$.ajax({
 			dataType: "json",
-			url: "create_room.php",
+			url: "creators/create_room.php",
 			data: {
 				handicapAccessible: handicap_accessible,
 				capacity: capacity,
 				number: number,
-				building: building
+				building: building,
+                id: editId
 			},
 			success: function(data) {
 				if (data.response !== "Success") {
@@ -52,10 +53,11 @@ $(function() {
            $("#building-selector").val(room.name);
            $("#room-number").val(room.nmbr);
            $("#max-capacity").val(room.cap);
-           $("#handicap-accessible").val(room.handicap_accessible);
+       }, {
+           id: editId
        });
     }
-    
+
  	$("#building-selector option:selected").change(function() {
         var parent = $("#building-selector").parents(".form-group");
         parent.removeClass("has-error");
@@ -80,7 +82,10 @@ $(function() {
 		parent.addClass("has-success");
 	}, {
 	    addBlank: true,
-	    multiselect: false
+	    multiselect: false,
+        done: function () {
+           $('#building-selector option[value="' + loadedRoom.building + '"]').prop("selected", true);
+        }
 	});
 });
 </script>
@@ -95,7 +100,8 @@ $(function() {
 
     <div class="form-group">
 	    <label for="building-selector">Building:</label>
-	    	<select class="form-control" id="building-selector" name="building">
+        
+    	<select class="form-control" id="building-selector" name="building">
 	    </select>
     </div>
 
