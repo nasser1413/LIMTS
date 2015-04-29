@@ -3,80 +3,77 @@ var editId = getParameterByName("edit"),
     loadedProfessor;    
     
 function onFormSubmitted() {
-    var name = $("#professorName1").val();
-    var ProfessorType = $("#professortype-selector option:selected").val();
-    var MaxCreditHours = $("#MaxCreditHours1").val();
-    var ValpoId = $("#valpoId1").val();
+    var name = $("#professor-name").val();
+    var professorType = parseInt($("#professortype-selector option:selected").val());
+    var maxCreditHours = $("#max-credit-hours").val();
+    var valpoId = $("#valpo-id").val();
   
+    if (!valpoId) {
+        $("#valpo-id").parents(".form-group").addClass("has-warning");
+    }
 
-if (!name || !MaxCreditHours || !ProfessorType|| !ValpoId) {
-
-	if (!name) {
-            $("#professorName1").parents(".form-group").addClass("has-error");
+    if (!name || !maxCreditHours || !professorType) {
+        if (!name) {
+            $("#professor-name").parents(".form-group").addClass("has-error");
         }
 
-	if (!MaxCreditHours) {
-            $("#MaxCreditHours1").parents(".form-group").addClass("has-error");
+        if (!maxCreditHours) {
+            $("#max-credit-hours").parents(".form-group").addClass("has-error");
         }
-	if (!ProfessorType) {
+
+        if (!professorType) {
             $("#professortype-selector").parents(".form-group").addClass("has-error");
         }
-	if (!ValpoId) {
-            $("#valpoId1").parents(".form-group").addClass("has-warning");
-		
-        }
 
-	 $("#warning-alert").offcanvas("show");
-
-	}else {
-	   $.ajax({
-	           dataType: "json",
-		   url: "create_professor.php",
-                 data: {
-              		  name: name,
-              		  MaxCreditHours: MaxCreditHours,
-			  ProfessorType:ProfessorType ,
-			  ValpoId:ValpoId
+        $("#warning-alert").offcanvas("show");
+    } else {
+        $.ajax({
+            dataType: "json",
+            url: "creators/create_professor.php",
+            data: {
+            name: name,
+                maxCreditHours: maxCreditHours,
+                professorType: professorType,
+                valpoId: valpoId,
+                id: editId
             },
-	        success: function(data) {
-                  if (data.response !== "Success") {
-                         alert(data.response);	
+            success: function(data) {
+                if (data.response !== "Success") {
+                    alert(data.response);	
                 } else {
-                      $("#success-alert").offcanvas("show");
+                    $("#success-alert").offcanvas("show");
                 }
             }
-  }); // ajax 
-
-}// else 
-
+        }); // ajax 
+    }// else
 }// close Class On FormSubmitted 
 
 $(function() {
-        // If "edit", load the existing data
+    // If "edit", load the existing data
     if (editId) {
        $("#form-header").text("Edit Professor");
        ajaxLoadJSON("professor", function(i, professor) {
            loadedProfessor = professor;
            $("#professor-name").val(professor.name);
-           $("#professortype-selector").val(professor.professor_type);
            $("#max-credit-hours").val(professor.max_credit_hours);
            $("#valpo-id").val(professor.valpo_id);
        });
     }
     
-    
-	$("#professorName1").change(function() {
-        var parent = $("#professorName1").parents(".form-group");
+	$("#professor-name").change(function() {
+        var parent = $("#professor-name").parents(".form-group");
         parent.removeClass("has-error");
         parent.addClass("has-success");
     });
-	$("#MaxCreditHours1").change(function() {
-        var parent = $("#MaxCreditHours1").parents(".form-group");
+
+	$("#max-credit-hours").change(function() {
+        var parent = $("#max-credit-hours").parents(".form-group");
         parent.removeClass("has-error");
         parent.addClass("has-success");
     });
-	$("#valpoId1").change(function() {
-        var parent = $("#valpoId1").parents(".form-group");
+
+	$("#valpo-id").change(function() {
+        var parent = $("#valpo-id").parents(".form-group");
         parent.removeClass("has-warning");
         parent.addClass("has-success");
     });
@@ -92,9 +89,19 @@ $(function() {
 		    parent.addClass("has-error");
 		    parent.removeClass("has-success");
 		}
+        
+        ajaxLoadJSON("professortype", function(i, type) {
+            $("#max-credit-hours").val(type.hours);
+            $("#max-credit-hours").change();
+        }, {
+            id: selected
+        });
 	}, {
 	    multiselect: false,
-	    addBlank: true
+	    addBlank: true,
+        done: function () {
+            $('#professortype-selector option[value="' + loadedProfessor.professor_type + '"]').prop("selected", true);
+        }
 	}); // close loadSelector
 }); // close function 
 </script>
@@ -102,10 +109,6 @@ $(function() {
 
 <div class="alert alert-danger alert-fixed-top offcanvas" id="warning-alert">
   <strong>Error!</strong> You must fill out the highlighted fields!
-</div>
-
-<div class="alert alert-warning alert-fixed-top offcanvas" id="warning-alert">
-  <strong>Warning!</strong> You have not add Valpo Id!
 </div>
 
 <div class="alert alert-success alert-fixed-top offcanvas" id="success-alert">
@@ -117,7 +120,7 @@ $(function() {
 <form action="javascript:onFormSubmitted()" id="mainForm">
 
     <div class="form-group">
-    <label for="professorName1">Professor Name:</label>
+    <label for="professor-name">Professor Name:</label>
     <input type="text" class="form-control" id="professor-name" name="professorName">
     </div>
 
@@ -128,13 +131,13 @@ $(function() {
 	</div>
 
     <div class="form-group">
-    <label for="MaxCreditHours1">Max Credit Hours:</label>
-    <input type="text" class="form-control" id="max-credit-hours" name="MaxCreditHours">
+    <label for="max-credit-hours">Max Credit Hours:</label>
+    <input type="text" class="form-control" id="max-credit-hours" name="max-credit-hours">
     <p class="help-block"><i>If left blank this will be populated based on the selected type</i></p>
     </div>
 
 	<div class="form-group">
-    <label for="valpoId1">Valparaiso ID:</label>
+    <label for="valpo-id">Valparaiso ID:</label>
     <input type="text" class="form-control" id="valpo-id" name="valpoId">
     </div>
 

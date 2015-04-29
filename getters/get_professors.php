@@ -33,11 +33,10 @@
             $credit_hours = $type[PROFESSORTYPE_CRHR];
         }
 
-		array_push($professors, array( 
-				        "id" => $row[PROFESSOR_ID],
+		array_push($professors, array(  "id" => $row[PROFESSOR_ID],
                                         "name" => $row[PROFESSOR_NAME],
-					"professor_type" => $row[PROFESSOR_TYPE],
-                                        "valpo_id" => $row[VALPO_ID],
+					                    "professor_type" => $row[PROFESSOR_TYPE],
+                                        "valpo_id" => $row[PROFESSOR_VID],
                                         "max_credit_hours" => $credit_hours ));
 	}
     $result->close();

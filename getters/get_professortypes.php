@@ -24,7 +24,8 @@
 	$professor_types = array();
 	while ($row = $result->fetch_row()) {
 		array_push($professor_types, array(  "id" => $row[PROFESSORTYPE_ID],
-                                            "name" => $row[PROFESSORTYPE_NAME] ));
+                                            "name" => $row[PROFESSORTYPE_NAME],
+                                            "hours" => $row[PROFESSORTYPE_CRHR] ));
 	}
     $result->close();
 
