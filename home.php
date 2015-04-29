@@ -32,7 +32,7 @@
 
         function updateModal(sectionId) {
             $("#edit-button").click(function() {
-                window.location.href='http://baker.valpo.edu/~jszaday/?page=add-section&edit='+sectionId+window.location.hash;
+                window.location.href='?page=add-section&edit='+sectionId+window.location.hash;
             });
 
             ajaxLoadJSON("section", function(i, section) {
