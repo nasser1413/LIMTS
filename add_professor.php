@@ -1,13 +1,13 @@
 <script type="text/javascript">
 var editId = getParameterByName("edit"),
-    loadedProfessor;    
-    
+    loadedProfessor;
+
 function onFormSubmitted() {
     var name = $("#professor-name").val();
     var professorType = parseInt($("#professortype-selector option:selected").val());
     var maxCreditHours = $("#max-credit-hours").val();
     var valpoId = $("#valpo-id").val();
-  
+
     if (!valpoId) {
         $("#valpo-id").parents(".form-group").addClass("has-warning");
     }
@@ -39,14 +39,14 @@ function onFormSubmitted() {
             },
             success: function(data) {
                 if (data.response !== "Success") {
-                    alert(data.response);	
+                    alert(data.response);
                 } else {
                     $("#success-alert").offcanvas("show");
                 }
             }
-        }); // ajax 
+        }); // ajax
     }// else
-}// close Class On FormSubmitted 
+}// close Class On FormSubmitted
 
 $(function() {
     // If "edit", load the existing data
@@ -57,9 +57,11 @@ $(function() {
            $("#professor-name").val(professor.name);
            $("#max-credit-hours").val(professor.max_credit_hours);
            $("#valpo-id").val(professor.valpo_id);
+       }, {
+           id: editId
        });
     }
-    
+
 	$("#professor-name").change(function() {
         var parent = $("#professor-name").parents(".form-group");
         parent.removeClass("has-error");
@@ -77,11 +79,11 @@ $(function() {
         parent.removeClass("has-warning");
         parent.addClass("has-success");
     });
-	
+
 	loadSelector("professortype", function() {
 		var selected = $("#professortype-selector option:selected").val();
 	    var parent = $("#professortype-selector").parents(".form-group");
-	
+
 		if (selected != 0) {
 		    parent.removeClass("has-error");
 		    parent.addClass("has-success");
@@ -89,7 +91,7 @@ $(function() {
 		    parent.addClass("has-error");
 		    parent.removeClass("has-success");
 		}
-        
+
         ajaxLoadJSON("professortype", function(i, type) {
             $("#max-credit-hours").val(type.hours);
             $("#max-credit-hours").change();
@@ -103,7 +105,7 @@ $(function() {
             $('#professortype-selector option[value="' + loadedProfessor.professor_type + '"]').prop("selected", true);
         }
 	}); // close loadSelector
-}); // close function 
+}); // close function
 </script>
 
 
