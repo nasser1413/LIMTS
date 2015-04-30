@@ -30,7 +30,7 @@
 	    // Check to see if the Professor already exist in the database
 	    $result = $conn->query("SELECT *
 				                FROM `Professor`
-				                WHERE `ValpoId`='$valpo_id'");
+				                WHERE `name`='$name'");
 	    if ($result->num_rows > 0) {
 		    die("{\"response\": \"Professor already exists in database\"}");
 	    }
