@@ -84,21 +84,21 @@ function initTable(filters) {
         success: function(data) {
             // Instanstiate a new TableBuilder
             var tableBuilder = new TableBuilder({
-                    "id": "sections"
-                });
+                "id": "sections"
+            });
 
             // Start the table"s header
             tableBuilder.startElement("thead");
             // Add a Row of class "header_row"
             tableBuilder.addRow({
-                    "class": "header_row"
-                });
+                "class": "header_row"
+            });
 
             var headers = data.columns;
             for (var i = 0; i < headers.length; i++) {
                 tableBuilder.addData(headers[i], {
-                        "class": "header_item"
-                    });
+                    "class": "header_item"
+                });
             }
 
             // End the table"s header
@@ -113,16 +113,16 @@ function initTable(filters) {
 
                 // start a new row (of class "section_row" & id "row_XXXXXXX")
                 tableBuilder.addRow({
-                        "class": "section_row",
-                        "id": "row_" + section.database_id
-                    });
+                    "class": "section_row",
+                    "id": "row_" + section.database_id
+                });
 
                 for (var key in section) {
                     if (section.hasOwnProperty(key)) {
                         if (key !== "database_id") {
                             tableBuilder.addData(section[key], {
-                                    "class": key
-                                });
+                                "class": key
+                            });
                         }
                     }
                 }
