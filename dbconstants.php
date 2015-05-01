@@ -32,8 +32,15 @@
  	define("SECTION_CLASS", 4);
  	define("SECTION_PROF", 5);
  	define("SECTION_TIMES", 6);
- 	define("SECTION_WEEKS", 7);
+ 	define("SECTION_TYPE", 7);
  	define("SECTION_MCAP", 8);
+
+    // Section Types
+ 	define("SECTION_TYPE_NORMAL", 1);
+ 	define("SECTION_TYPE_TBA", 2);
+ 	define("SECTION_TYPE_ODD", 3);
+ 	define("SECTION_TYPE_EVEN", 4);
+ 	define("SECTION_TYPE_ONLINE", 5);
 
  	// Room Column information
  	define("ROOM_ID", 0);

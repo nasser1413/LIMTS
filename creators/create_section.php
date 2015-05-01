@@ -17,18 +17,32 @@
 	$class = $_GET["class"];
 	$professor = $_GET["professor"];
 	$meeting_times = $_GET["meeting_times"];
-	$week_style = $_GET["week_style"];
+	$meeting_type = $_GET["meeting_type"];
 	$max_capacity = $_GET["max_capacity"];
 	$database_id = $_GET["database_id"];
+
+    switch($meeting_type) {
+        case SECTION_TYPE_TBA:
+            $meeting_times = "[\"TBA\"]";
+	        $rooms = "[0]";
+            break;
+        case SECTION_TYPE_ONLINE:
+            $meeting_times = "[\"ONLINE\"]";
+	        $rooms = "[0]";
+            break;
+        case SECTION_TYPE_ODD:
+        case SECTION_TYPE_EVEN:
+            break;
+        default:
+            $meeting_type = SECTION_TYPE_NORMAL;
+            break;
+    }
 
 	// Check to make sure the required information is present
 	if (!check_parameters($identifier, $rooms, $semester, $class, $professor, $meeting_times)) {
 		die("{\"response\": \"You must specify the section id, rooms, semester, class, professor and meeting times.\"}");
 	}
-	// Assume a default value for week_style
-	if (!$week_style) {
-		$week_style = 1;
-	}
+
 	// and for max_capacity
 	if (!$max_capacity) {
 		$max_capacity = "NULL";
@@ -48,11 +62,11 @@
 		// Everything seems ok at this point, so just add the semester
 		//	In Reality, we should check all of these parameters against the database (but we don't have to worry a ton
 		//	because we'll get 'em from our *own* UI which should validate them for us)
-		$result = $conn->query("INSERT INTO `Section` (Identifier, Rooms, Semester, Class, Professor, MeetingTimes, WeekStyle, MaxCapacity)
-					VALUES('$identifier', '$rooms', '$semester', '$class', '$professor', '$meeting_times', '$week_style', $max_capacity)");
+		$result = $conn->query("INSERT INTO `Section` (Identifier, Rooms, Semester, Class, Professor, MeetingTimes, MeetingType, MaxCapacity)
+					VALUES('$identifier', '$rooms', '$semester', '$class', '$professor', '$meeting_times', '$meeting_type', $max_capacity)");
 	} else {
 		$query = "UPDATE `Section`
-					SET Identifier='$identifier', Rooms='$rooms', Semester='$semester', Class='$class', Professor='$professor', MeetingTimes='$meeting_times', WeekStyle='$week_style', MaxCapacity='$max_capacity'
+					SET Identifier='$identifier', Rooms='$rooms', Semester='$semester', Class='$class', Professor='$professor', MeetingTimes='$meeting_times', MeetingType='$meeting_type', MaxCapacity='$max_capacity'
 					WHERE id=$database_id";
 		$result = $conn->query($query);
 	}

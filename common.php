@@ -110,7 +110,7 @@
 		public $meeting_times;
 		public $rooms;
 		public $semester;
-		public $week_style;
+		public $meeting_type;
 		public $professor;
 		public $capacity;
 		public $database_id;
@@ -126,7 +126,7 @@
 			$section->credit_hours = $class[CLASS_CREDITHOURS];
 			$section->title = $class[CLASS_TITLE];
 			$section->semester = $semester[SEMESTER_NAME];
-			$section->week_style = $db_row[SECTION_WEEKS];
+			$section->meeting_type = $db_row[SECTION_TYPE];
 			$section->professor = $professor[PROFESSOR_NAME];
 			$section->meeting_times = json_decode($db_row[SECTION_TIMES]);
 

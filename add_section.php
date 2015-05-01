@@ -4,6 +4,7 @@
                 rowId = 0,
                 rowTemplate,
                 editId = getParameterByName("edit"),
+                sectionType = 1,
                 loadedSection;
 
             function onFormSubmitted() {
@@ -30,26 +31,31 @@
                     $("#identifier").closest(".form-group").addClass("has-error");
                 }
 
-                section.rooms = [];
-                section.meeting_times = [];
-                for (var i = 1; i <= rowId; i++) {
-                    var meetingTime = $("#meeting-time" + i);
-                    var parent = meetingTime.parents(".form-group");
+                section.meeting_type = sectionType;
+                if (section.meeting_type == 1) {
+                    section.rooms = [];
+                    section.meeting_times = [];
 
-                    if (!meetingTimeRegex.test(meetingTime.val())) {
-                        parent.addClass("has-error");
+                    for (var i = 1; i <= rowId; i++) {
+                        var meetingTime = $("#meeting-time" + i);
+                        var parent = meetingTime.parents(".form-group");
+
+                        if (!meetingTimeRegex.test(meetingTime.val())) {
+                            parent.addClass("has-error");
+                        }
+
+                        var room = $("#room-selector" + i + " option:selected");
+                        if (!room) {
+                            parent.addClass("has-error");
+                        }
+
+                        section.meeting_times.push(meetingTime.val());
+                        section.rooms.push(room.val());
                     }
 
-                    var room = $("#room-selector" + i + " option:selected");
-                    if (!room) {
-                        parent.addClass("has-error");
-                    }
-
-                    section.meeting_times.push(meetingTime.val());
-                    section.rooms.push(room.val());
+                    section.meeting_times = JSON.stringify(section.meeting_times);
+                    section.rooms = JSON.stringify(section.rooms);
                 }
-                section.meeting_times = JSON.stringify(section.meeting_times);
-                section.rooms = JSON.stringify(section.rooms);
 
                 if ($(".has-error").length !== 0) {
                     $("#danger-alert")
@@ -220,6 +226,21 @@
                 $("#max-capacity").change(onCapacityChanged);
 
                 $("#identifier").change(onIdentifierChanged);
+
+                $('input[type="radio"]').click(function() {
+                    var $radio = $(this);
+                    sectionType = $radio.val();
+
+                    if (sectionType != 1) {
+                        $("#times-group").css("display", "none");
+
+                        $("#times-group")
+                            .parents(".form-group").find(".has-error")
+                            .removeClass("has-error");
+                    } else {
+                        $("#times-group").css("display", "block");
+                    }
+                });
             });
         </script>
 
@@ -273,7 +294,31 @@
                 <label for="classIdentifier1">Identifier:</label>
                 <input type="text" class="form-control" id="identifier" placeholder="A" name="classIdentifier">
             </div>
-            <div class="form-group" style="margin-bottom: 5px;">
+            <div class="form-group">
+                <label for="type-group">Meeting Types:</label>
+                <div id="type-group">
+                    <label class="radio-inline">
+                    <input type="radio" name="inlineRadioOptions" value="1" checked> Normal
+                    </label>
+
+                    <label class="radio-inline">
+                    <input type="radio" name="inlineRadioOptions" value="3" disabled> Odd Weeks
+                    </label>
+
+                    <label class="radio-inline">
+                    <input type="radio" name="inlineRadioOptions" value="4" disabled> Even Weeks
+                    </label>
+
+                    <label class="radio-inline">
+                    <input type="radio" name="inlineRadioOptions" value="5"> Online
+                    </label>
+
+                    <label class="radio-inline">
+                    <input type="radio" name="inlineRadioOptions" value="2"> TBA
+                    </label>
+                </div>
+            </div>
+            <div class="form-group" style="margin-bottom: 5px;" id="times-group">
                 <table class="table table-striped">
                     <thead>
                         <tr>

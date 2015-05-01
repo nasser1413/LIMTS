@@ -24,7 +24,7 @@
 
     foreach ($filtered_sections as $section) {
       // If the section isn't in our semester we need to skip it
-      if ($section->semester != $semester["name"]) {
+      if ($section->semester != $semester["name"] || $section->meeting_type != SECTION_TYPE_NORMAL) {
         continue;
       }
       // Grab the relevant section information
