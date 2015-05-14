@@ -1,5 +1,6 @@
         <script type="text/javascript">
             var modifiedCapacity = false,
+                modifiedCreditHours = false,
                 meetingTimeRegex = /([A-Z]+) *(\d+:\d+[ap])-(\d+:\d+[ap])/,
                 rowId = 0,
                 rowTemplate,
@@ -14,6 +15,7 @@
                     section.database_id = editId;
                 }
 
+                section.credit_hours = $("#credit-hours").val();
                 section.class = $("#class-selector option:selected").val();
                 section.professor = $("#professor-selector option:selected").val();
                 section.semester = $("#semester-selector option:selected").val();
@@ -170,6 +172,22 @@
                 }
             }
 
+            function onClassSelected() {
+                if (modifiedCreditHours) {
+                    // Exit if the user has manually changed the crhr
+                    return;
+                }
+
+                var $selector = $(this),
+                    $selected = $selector.find("option:selected");
+
+                ajaxLoadJSON("class", function(i, selectedClass) {
+                    $("#credit-hours").val(selectedClass.credithours);
+                }, {
+                    id: $selected.val()
+                });
+            }
+
             $(function() {
                 rowTemplate = $("#row-template").html();
 
@@ -180,7 +198,8 @@
                     multiselect: false
                 });
                 loadSelector("class", undefined, {
-                    multiselect: false
+                    multiselect: false,
+                    done: onClassSelected
                 });
 
                 if (editId) {
@@ -213,6 +232,8 @@
                         $.each(loadedSection.meeting_times, function(i, meetingTime) {
                             addRow(loadedSection.rooms[i], meetingTime);
                         });
+
+                        $('#type-group input[value="'+loadedSection.meeting_type+'"]').prop("checked", true).click();
                     }, {
                         id: [editId]
                     });
@@ -226,6 +247,12 @@
                 $("#max-capacity").change(onCapacityChanged);
 
                 $("#identifier").change(onIdentifierChanged);
+
+                $("#class-selector").change(onClassSelected);
+
+                $("#credit-hours").change(function() {
+                    modifiedCreditHours = true;
+                });
 
                 $('input[type="radio"]').click(function() {
                     var $radio = $(this);
@@ -287,8 +314,13 @@
             </div>
             <div class="form-group">
                 <label for="max-capacity">Max Capacity:</label>
-                <input type="text" class="form-control" id="max-capacity" name="maxCapacity">
+                <input type="number" class="form-control" id="max-capacity" name="maxCapacity">
                 <p class="help-block"><i>If left blank this will be populated based on the selected room(s)</i></p>
+            </div>
+            <div class="form-group">
+                <label for="max-capacity">Credit Hours:</label>
+                <input type="number" class="form-control" id="credit-hours" name="creditHours">
+                <p class="help-block"><i>If left blank this will be populated based on the selected class</i></p>
             </div>
             <div class="form-group">
                 <label for="classIdentifier1">Identifier:</label>

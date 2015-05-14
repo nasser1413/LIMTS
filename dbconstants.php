@@ -34,6 +34,7 @@
  	define("SECTION_TIMES", 6);
  	define("SECTION_TYPE", 7);
  	define("SECTION_MCAP", 8);
+ 	define("SECTION_CRHR", 9);
 
     // Section Types
  	define("SECTION_TYPE_NORMAL", 1);

@@ -123,30 +123,37 @@
 
 			$section->database_id = $db_row[SECTION_DBID];
 			$section->name = $class[CLASS_NAME] . "-" . $db_row[SECTION_ID];
-			$section->credit_hours = $class[CLASS_CREDITHOURS];
 			$section->title = $class[CLASS_TITLE];
 			$section->semester = $semester[SEMESTER_NAME];
 			$section->meeting_type = $db_row[SECTION_TYPE];
 			$section->professor = $professor[PROFESSOR_NAME];
 			$section->meeting_times = json_decode($db_row[SECTION_TIMES]);
 
-			$section->rooms = array();
-			$smallest_cap = PHP_INT_MAX;
-			$room_ids = json_decode($db_row[SECTION_ROOMS]);
-			foreach ($room_ids as $room_id) {
-				$room = get_x_with_id($conn, "Room", $room_id);
-				$building = get_x_with_id($conn, "Building", $room[ROOM_BLDG]);
-
-				if ($room[ROOM_CAP] < $smallest_cap) {
-					$smallest_cap = $room[ROOM_CAP];
-				}
-
-				array_push($section->rooms, $building[BUILDING_ABRV] . "-" . $room[ROOM_NMBR]);
+			// Load the number of credit hours from the row at first
+			$section->credit_hours = $dbrow[SECTION_CRHR];
+			// But if it is null
+			if (!$section->credit_hours) {
+				// Grab them from the class instead
+				$section->credit_hours = $class[CLASS_CREDITHOURS];
 			}
 
-			if ($db_row[SECTION_MCAP]) {
-				$section->capacity = $db_row[SECTION_MCAP];
-			} else {
+			$section->capacity = $db_row[SECTION_MCAP];
+			// If the section does not provide a meeting size cap
+			if (!$section->capacity) {
+				$section->rooms = array();
+				$smallest_cap = PHP_INT_MAX;
+				$room_ids = json_decode($db_row[SECTION_ROOMS]);
+				foreach ($room_ids as $room_id) {
+					$room = get_x_with_id($conn, "Room", $room_id);
+					$building = get_x_with_id($conn, "Building", $room[ROOM_BLDG]);
+
+					if ($room[ROOM_CAP] < $smallest_cap) {
+						$smallest_cap = $room[ROOM_CAP];
+					}
+
+					array_push($section->rooms, $building[BUILDING_ABRV] . "-" . $room[ROOM_NMBR]);
+				}
+
 				// Assign to smallest capacity
 				$section->capacity = $smallest_cap;
 			}

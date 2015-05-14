@@ -11,15 +11,16 @@
 	}
 
 	// Get all of the "Parameters" (IRL don't forget to escape them to prevent SQLi!!!)
-	$identifier = $_GET["identifier"];
-	$rooms = $_GET["rooms"];
-	$semester = $_GET["semester"];
 	$class = $_GET["class"];
-	$professor = $_GET["professor"];
+	$credit_hours = $_GET["credit_hours"];
+	$database_id = $_GET["database_id"];
+	$identifier = $_GET["identifier"];
+	$max_capacity = $_GET["max_capacity"];
 	$meeting_times = $_GET["meeting_times"];
 	$meeting_type = $_GET["meeting_type"];
-	$max_capacity = $_GET["max_capacity"];
-	$database_id = $_GET["database_id"];
+	$professor = $_GET["professor"];
+	$rooms = $_GET["rooms"];
+	$semester = $_GET["semester"];
 
     switch($meeting_type) {
         case SECTION_TYPE_TBA:
@@ -48,6 +49,10 @@
 		$max_capacity = "NULL";
 	}
 
+    if (!$credit_hours) {
+        $credit_hours = "NULL";
+    }
+
 	// Check to see if the section already exists in the database
 	if (!$database_id) {
 		$result = $conn->query("SELECT *
@@ -62,11 +67,11 @@
 		// Everything seems ok at this point, so just add the semester
 		//	In Reality, we should check all of these parameters against the database (but we don't have to worry a ton
 		//	because we'll get 'em from our *own* UI which should validate them for us)
-		$result = $conn->query("INSERT INTO `Section` (Identifier, Rooms, Semester, Class, Professor, MeetingTimes, MeetingType, MaxCapacity)
-					VALUES('$identifier', '$rooms', '$semester', '$class', '$professor', '$meeting_times', '$meeting_type', $max_capacity)");
+		$result = $conn->query("INSERT INTO `Section` (Identifier, Rooms, Semester, Class, Professor, MeetingTimes, MeetingType, MaxCapacity, CreditHours)
+					VALUES('$identifier', '$rooms', '$semester', '$class', '$professor', '$meeting_times', '$meeting_type', $max_capacity, $credit_hours)");
 	} else {
 		$query = "UPDATE `Section`
-					SET Identifier='$identifier', Rooms='$rooms', Semester='$semester', Class='$class', Professor='$professor', MeetingTimes='$meeting_times', MeetingType='$meeting_type', MaxCapacity='$max_capacity'
+					SET Identifier='$identifier', Rooms='$rooms', Semester='$semester', Class='$class', Professor='$professor', MeetingTimes='$meeting_times', MeetingType='$meeting_type', MaxCapacity='$max_capacity', CreditHours='$credit_hours'
 					WHERE id=$database_id";
 		$result = $conn->query($query);
 	}
