@@ -130,7 +130,7 @@
 			$section->meeting_times = json_decode($db_row[SECTION_TIMES]);
 
 			// Load the number of credit hours from the row at first
-			$section->credit_hours = $dbrow[SECTION_CRHR];
+			$section->credit_hours = $db_row[SECTION_CRHR];
 			// But if it is null
 			if (!$section->credit_hours) {
 				// Grab them from the class instead
