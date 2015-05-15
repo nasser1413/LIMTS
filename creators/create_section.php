@@ -58,7 +58,8 @@
 		$result = $conn->query("SELECT *
 					FROM `Section`
 					WHERE `Identifier`='$identifier'
-					AND `Class`='$class'");
+					AND `Class`='$class'
+                    AND `Semester`='$semester'");
 		if ($result->num_rows > 0) {
 			die("{\"response\": \"Section already exists in database\"}");
 		}
