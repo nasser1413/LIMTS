@@ -132,11 +132,11 @@
 			// Load the number of credit hours from the row at first
 			$section->credit_hours = $db_row[SECTION_CRHR];
 			// But if it is null
-			if (!$section->credit_hours) {
+			if (is_null($section->credit_hours)) {
 				// Grab them from the class instead
 				$section->credit_hours = $class[CLASS_CREDITHOURS];
 			}
-			
+
 			$section->rooms = array();
 			$smallest_cap = PHP_INT_MAX;
 			$room_ids = json_decode($db_row[SECTION_ROOMS]);
