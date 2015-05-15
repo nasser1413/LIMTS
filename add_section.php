@@ -15,7 +15,10 @@
                     section.database_id = editId;
                 }
 
-                section.credit_hours = $("#credit-hours").val();
+                if (modifiedCreditHours) {
+                    section.credit_hours = $("#credit-hours").val();
+                }
+                
                 section.class = $("#class-selector option:selected").val();
                 section.professor = $("#professor-selector option:selected").val();
                 section.semester = $("#semester-selector option:selected").val();
@@ -199,7 +202,7 @@
                 });
                 loadSelector("class", undefined, {
                     multiselect: false,
-                    done: onClassSelected
+                    done: (editId ? undefined : onClassSelected)
                 });
 
                 if (editId) {
@@ -227,6 +230,11 @@
                         if (loadedSection.max_capacity) {
                             $("#max-capacity").val(loadedSection.max_capacity);
                             modifiedCapacity = true;
+                        }
+
+                        if (loadedSection.credit_hours != null) {
+                            modifiedCreditHours = true;
+                            $("#credit-hours").val(loadedSection.credit_hours);
                         }
 
                         $.each(loadedSection.meeting_times, function(i, meetingTime) {

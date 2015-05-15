@@ -55,6 +55,10 @@ function initConstraints(semesters) {
         $.when(this, ajax).done(function() {
             var textClass = "text-";
 
+            if (isNaN(creditHours)) {
+                creditHours = 0;
+            }
+
             if (creditHours > professor.max_credit_hours) {
                 textClass += "danger";
             } else if (creditHours === professor.max_credit_hours) {
