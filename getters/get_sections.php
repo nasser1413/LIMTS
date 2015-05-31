@@ -6,11 +6,12 @@
 	$conn = new mysqli($GLOBALS["dbhost"], $GLOBALS["dbuser"], $GLOBALS["dbpass"], $GLOBALS["dbname"]);
 
 	// Check connection
-	if ($conn->connect_error) {
+	if ($conn->connect_error || !session_start()) {
 		die("Connection failed: " . $conn->connect_error);
 	}
 
 	// Get all of the "Parameters"
+	$userId = $_SESSION[USER_ID];
 	$section_ids = $_GET["id"];
 	$professors = $_GET["professor"];
 	$semesters = $_GET["semester"];
@@ -19,7 +20,7 @@
 	$buildings = $_GET["building"];
 
 	// Initialize the Query to be a blank string
-	$query = "";
+	$query = "WHERE `UserID` = $userId";
 
 	// If the sections id was provided for us
 	if ($section_ids) {
@@ -49,9 +50,6 @@
 		// Append the classes Query
 		$query .= PHP_EOL . "AND `Class` IN ($classes)";
 	}
-
-	// Now here's where we replace the first occurence of "AND" with "WHERE" so the query works
-	$query = str_replace_first(PHP_EOL . "AND", PHP_EOL . "WHERE", $query);
 
 	// Then, load only the desired sections (which is potentially all of them)
 	$sections_pool = get_all_sections_with_query($conn, $query);

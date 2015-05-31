@@ -6,9 +6,11 @@
 	$conn = new mysqli($GLOBALS["dbhost"], $GLOBALS["dbuser"], $GLOBALS["dbpass"], $GLOBALS["dbname"]);
 
 	// Check connection
-	if ($conn->connect_error) {
-		die("{\"response\": \"Connection failed: " . $conn->connect_error . "\"}");
+    if ($conn->connect_error || !session_start()) {
+		die("Connection failed: " . $conn->connect_error);
 	}
+
+	$userId = $_SESSION[USER_ID];
 
 	// Get all of the "Parameters" (IRL don't forget to escape them to prevent SQLi!!!)
 	$class = $_GET["class"];
@@ -57,7 +59,8 @@
 	if (!$database_id) {
 		$result = $conn->query("SELECT *
 					FROM `Section`
-					WHERE `Identifier`='$identifier'
+                    WHERE `UserID` = $userId
+					AND `Identifier`='$identifier'
 					AND `Class`='$class'
                     AND `Semester`='$semester'");
 		if ($result->num_rows > 0) {
@@ -68,8 +71,8 @@
 		// Everything seems ok at this point, so just add the semester
 		//	In Reality, we should check all of these parameters against the database (but we don't have to worry a ton
 		//	because we'll get 'em from our *own* UI which should validate them for us)
-		$result = $conn->query("INSERT INTO `Section` (Identifier, Rooms, Semester, Class, Professor, MeetingTimes, MeetingType, MaxCapacity, CreditHours)
-					VALUES('$identifier', '$rooms', '$semester', '$class', '$professor', '$meeting_times', '$meeting_type', $max_capacity, $credit_hours)");
+		$result = $conn->query("INSERT INTO `Section` (Identifier, Rooms, Semester, Class, Professor, MeetingTimes, MeetingType, MaxCapacity, CreditHours, UserID)
+					VALUES('$identifier', '$rooms', '$semester', '$class', '$professor', '$meeting_times', '$meeting_type', $max_capacity, $credit_hours, $userId)");
 	} else {
 		$query = "UPDATE `Section`
 					SET Identifier='$identifier', Rooms='$rooms', Semester='$semester', Class='$class', Professor='$professor', MeetingTimes='$meeting_times', MeetingType='$meeting_type', MaxCapacity='$max_capacity', CreditHours='$credit_hours'

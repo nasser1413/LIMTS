@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<?php require_once "common.php"; session_start(); ?>
 <html lang="en">
 <head>
     <!-- Define all of the metadata -->
@@ -39,7 +40,12 @@ include "header.php";
     <div class="container" id="main-container">
 <?php
 $page = $_GET["page"];
-// check to make sure pages actually exist first (this is laziness)
+
+// TODO check to make sure pages actually exist first (this is laziness)
+if (!(is_user_logged_in() || $page == "register")) {
+    $page = "login";
+}
+
 if ($page) {
     $page = str_replace("-", "_", $page);
 

@@ -5,11 +5,12 @@
     $conn = new mysqli($GLOBALS["dbhost"], $GLOBALS["dbuser"], $GLOBALS["dbpass"], $GLOBALS["dbname"]);
 
     // Check connection
-    if ($conn->connect_error) {
-      die("Connection failed: " . $conn->connect_error);
-    }
+    if ($conn->connect_error || !session_start()) {
+		die("Connection failed: " . $conn->connect_error);
+	}
 
     // Get all of the "Parameters"
+	$userId = $_SESSION[USER_ID];
     $start = strtotime($_GET["start"]);
     $end = strtotime($_GET["end"]);
 
@@ -21,7 +22,8 @@
     // Grab all of the Semesters
     $semesters_in_range = array();
     $query = "SELECT *
-              FROM `Semester`";
+              FROM `Semester`
+              WHERE `UserID` = $userId";
     $result = $conn->query($query);
     while ($row = $result->fetch_row()) {
       // Convert the times into an appropriate format

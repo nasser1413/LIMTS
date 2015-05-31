@@ -6,16 +6,18 @@
 	$conn = new mysqli($GLOBALS["dbhost"], $GLOBALS["dbuser"], $GLOBALS["dbpass"], $GLOBALS["dbname"]);
 
 	// Check connection
-	if ($conn->connect_error) {
+	if ($conn->connect_error || !session_start()) {
 		die("Connection failed: " . $conn->connect_error);
 	}
 
+	$userId = $_SESSION[USER_ID];
     $query = "SELECT *
-			  FROM  `Building`";
+			  FROM  `Building`
+		      WHERE `UserID` = $userId";
 
     $id = $_GET["id"];
     if ($id) {
-        $query .= PHP_EOL . "WHERE Id = $id";
+        $query .= PHP_EOL . "AND Id = $id";
     }
 
 	$result = $conn->query($query);

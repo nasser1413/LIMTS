@@ -7,6 +7,10 @@
 
 	require_once "dbconstants.php";
 
+	/************************************************************
+	*   "Getter" Functions						                *
+	************************************************************/
+
 	// Get something of type $type with id $id
 	function get_x_with_id($conn, $type, $id) {
 		$result = $conn->query("SELECT *
@@ -49,6 +53,27 @@
 		return $building;
 	}
 
+	// Parse meeting times into a more appropriate format
+	function parse_meeting_times($meeting_times) {
+		$parsed_times = array();
+		foreach ($meeting_times as $meeting_time) {
+			preg_match($GLOBALS["date_regex"], $meeting_time, $matches);
+			$days = $matches[1];
+			$start = strtotime($matches[2] . "m", 0);
+			$end = strtotime($matches[3] . "m", 0);
+			$range = array($start, $end);
+
+			for ($i = 0; $i < strlen($days); $i++) {
+				$parsed_times[$GLOBALS["day_abbreviations"][$days{$i}]] = $range;
+			}
+		}
+		return $parsed_times;
+	}
+
+	/************************************************************
+	*   Utility Functions						                *
+	************************************************************/
+
 	// Replace the first occurence of something
 	function str_replace_first($search, $replace, $subject) {
 		$pos = strpos($subject, $search);
@@ -58,7 +83,7 @@
 		return $subject;
 	}
 
-	// Check a bunch o' parameters & make sure they ain't null
+	// Check a bunch o" parameters & make sure they ain"t null
 	function check_parameters() {
 		$params = func_get_args();
 		foreach ($params as $param) {
@@ -87,21 +112,112 @@
 		}
 	}
 
-	function parse_meeting_times($meeting_times) {
-		$parsed_times = array();
-		foreach ($meeting_times as $meeting_time) {
-			preg_match($GLOBALS["date_regex"], $meeting_time, $matches);
-			$days = $matches[1];
-			$start = strtotime($matches[2] . "m", 0);
-			$end = strtotime($matches[3] . "m", 0);
-			$range = array($start, $end);
+	/************************************************************
+	*   User Management Functions					            *
+	************************************************************/
 
-			for ($i = 0; $i < strlen($days); $i++) {
-				$parsed_times[$GLOBALS["day_abbreviations"][$days{$i}]] = $range;
-			}
-		}
-		return $parsed_times;
+	// creates a 3 character sequence
+	function create_salt()
+	{
+		$string = md5(uniqid(rand() , true));
+		return substr($string, 0, 3);
 	}
+
+	// this is a security measure
+	function validate_user($user_data)
+	{
+		session_regenerate_id();
+		$_SESSION = array_merge($_SESSION, $user_data);
+		$_SESSION[SESSION_VALID] = true;
+		session_write_close();
+	}
+
+	// destroys all of the session variables
+	function logout_user()
+	{
+		$_SESSION = array();
+		session_destroy();
+	}
+
+	// returns true if the user is logged in
+	function is_user_logged_in()
+	{
+		return isset($_SESSION[SESSION_VALID]) && $_SESSION[SESSION_VALID];
+	}
+
+	// logs a user in, returns an error string if unsuccessful
+	function login_user($username, $password)
+	{
+		$username = strtolower($username);
+		$mysqli = new mysqli($GLOBALS["dbhost"], $GLOBALS["dbuser"], $GLOBALS["dbpass"], $GLOBALS["dbname"]);
+		if (mysqli_connect_errno())
+		{
+			return mysqli_connect_error();
+		}
+		$username = $mysqli->real_escape_string($username);
+		$query = "SELECT * FROM Users WHERE Username = '$username';";
+		$result = $mysqli->query($query);
+		if ($result->num_rows < 1)
+		{
+			$result->close();
+			$mysqli->close();
+			return "User \"$username\" not found!";
+		}
+		$user_data = $result->fetch_assoc();
+		$result->close();
+		$hash = hash("sha256", $user_data[USER_SALT] . hash("sha256", $password));
+		if ($hash != $user_data[USER_PASSWORD])
+		{
+			$mysqli->close();
+			return "Incorrect password for user \"$username\"!";
+		}
+		$mysqli->close();
+		validate_user($user_data);
+		return "Successful";
+	}
+
+	// registers a user, returns an error string if unsuccessful
+	function register_user($username, $password, $firstname, $lastname)
+	{
+		$username = strtolower($username);
+		$hash = hash("sha256", $password);
+		$salt = create_salt();
+		$hash = hash("sha256", $salt . $hash);
+		$mysqli = new mysqli($GLOBALS["dbhost"], $GLOBALS["dbuser"], $GLOBALS["dbpass"], $GLOBALS["dbname"]);
+		if (mysqli_connect_errno())
+		{
+			return mysqli_connect_error();
+		}
+		// sanitize username
+		$username = $mysqli->real_escape_string($username);
+		// check if user is registered
+		$query = "SELECT * FROM Users WHERE Username = '$username';";
+		$result = $mysqli->query($query);
+		if ($result->num_rows > 0)
+		{
+			// if they are, close the connection and result and return
+			$result->close();
+			$mysqli->close();
+			return "Username already registered!";
+		}
+		// close the result
+		$result->close();
+		// insert user into database
+		$query = "INSERT INTO Users ( Username, FirstName, LastName, Password, Salt ) VALUES ( '$username' , '$firstname' , '$lastname', '$hash', '$salt' );";
+		$result = $mysqli->query($query);
+		if (!$result) {
+			$mysqli->close();
+			return "Could not insert user.";
+		}
+		// Close the connection
+		$mysqli->close();
+		// Return Successful
+		return "Successful";
+	}
+
+	/************************************************************
+	*   Misc. Classes							                *
+	************************************************************/
 
 	class ValpoSection {
 		public $name;

@@ -12,18 +12,20 @@
 	$conn = new mysqli($GLOBALS["dbhost"], $GLOBALS["dbuser"], $GLOBALS["dbpass"], $GLOBALS["dbname"]);
 
 	// Check connection
-	if ($conn->connect_error) {
+	if ($conn->connect_error || !session_start()) {
 		die("Connection failed: " . $conn->connect_error);
 	}
 
 	// Default Query
+	$userId = $_SESSION[USER_ID];
     $query = "SELECT *
-			  FROM  `Class`";
+			  FROM  `Class`
+			  WHERE `UserID` = $userId";
 
 	// With additional parameters if needed
     $id = $_GET["id"];
     if ($id) {
-        $query .= PHP_EOL . "WHERE Id = $id";
+        $query .= PHP_EOL . "AND Id = $id";
     }
 
 	// For each of the results

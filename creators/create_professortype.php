@@ -6,9 +6,11 @@
 	$conn = new mysqli($GLOBALS["dbhost"], $GLOBALS["dbuser"], $GLOBALS["dbpass"], $GLOBALS["dbname"]);
 
 	// Check connection
-	if ($conn->connect_error) {
+    if ($conn->connect_error || !session_start()) {
 		die("Connection failed: " . $conn->connect_error);
 	}
+
+	$userId = $_SESSION[USER_ID];
 
 	// Get all of the "Parameters"
 	$name = $_GET["name"];
@@ -24,15 +26,16 @@
     	// Check to see if the Type already exists in the database
     	$result = $conn->query("SELECT *
     							FROM `ProfessorType`
-    							WHERE `Name`='$name'");
+                                WHERE `UserID` = $userId
+    							AND `Name`='$name'");
     	if ($result->num_rows > 0) {
     		die("{\"response\": \"Type already exists in database\"}");
     	}
     	$result->close();
 
     	// Everything seems ok at this point, so just add the room
-    	$result = $conn->query("INSERT INTO `ProfessorType`(`Name`, `DefaultCreditHours`)
-    							VALUES('$name', '$credit_hours')");
+    	$result = $conn->query("INSERT INTO `ProfessorType`(`Name`, `DefaultCreditHours`, `UserID`)
+    							VALUES('$name', '$credit_hours', '$userId')");
     } else {
         $query = "UPDATE `ProfessorType`
                     SET Name='$name', `DefaultCreditHours`='$credit_hours'

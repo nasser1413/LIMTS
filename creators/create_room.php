@@ -6,9 +6,11 @@
 	$conn = new mysqli($GLOBALS["dbhost"], $GLOBALS["dbuser"], $GLOBALS["dbpass"], $GLOBALS["dbname"]);
 
 	// Check connection
-	if ($conn->connect_error) {
+    if ($conn->connect_error || !session_start()) {
 		die("Connection failed: " . $conn->connect_error);
 	}
+
+	$userId = $_SESSION[USER_ID];
 
 	// Get all of the "Parameters"
 	$building = $_GET["building"];
@@ -30,15 +32,17 @@
     	// Check to see if the Room already exists in the database
     	$result = $conn->query("SELECT *
     							FROM `Room`
-    							WHERE `Building`='$building' AND `Number`='$number'");
+                                WHERE `UserID` = $userId
+    							AND `Building`='$building'
+                                AND `Number`='$number'");
     	if ($result->num_rows > 0) {
     		die("{\"response\": \"Room already exists in database\"}");
     	}
     	$result->close();
 
     	// Everything seems ok at this point, so just add the room
-    	$result = $conn->query("INSERT INTO `Room`(`Building`, `Number`, `Capacity`, `HandicapAccessible`)
-    							VALUES('$building', '$number', '$capacity', '$handicap_accessible')");
+    	$result = $conn->query("INSERT INTO `Room`(`Building`, `Number`, `Capacity`, `HandicapAccessible`, `UserID`)
+    							VALUES('$building', '$number', '$capacity', '$handicap_accessible', '$userId')");
     } else {
         $query = "UPDATE `Room`
                     SET Building='$building', `Number`='$number', Capacity='$capacity', HandicapAccessible='$handicap_accessible'

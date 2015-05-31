@@ -120,7 +120,6 @@ $(function() {
 
 <h1 id="form-header">Add Professor</h1>
 <form action="javascript:onFormSubmitted()" id="mainForm">
-
     <div class="form-group">
     <label for="professor-name">Professor Name:</label>
     <input type="text" class="form-control" id="professor-name" name="professorName">
@@ -146,5 +145,4 @@ $(function() {
     <div class="form-group">
     <input type="submit" class="btn btn-default" value="Submit">
     </div>
-
 </form>

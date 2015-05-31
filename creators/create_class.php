@@ -6,9 +6,11 @@
     $conn = new mysqli($GLOBALS["dbhost"], $GLOBALS["dbuser"], $GLOBALS["dbpass"], $GLOBALS["dbname"]);
 
     // Check connection
-    if ($conn->connect_error) {
-      die("Connection failed: " . $conn->connect_error);
-    }
+    if ($conn->connect_error || !session_start()) {
+		die("Connection failed: " . $conn->connect_error);
+	}
+
+	$userId = $_SESSION[USER_ID];
 
     // Get all of the "Parameters"
     $name = $_GET["name"];
@@ -26,7 +28,8 @@
         // Check to see if the Building already exists in the database
         $result = $conn->query("SELECT *
                                 FROM `Class`
-                                WHERE `Name`='$name'");
+                                WHERE `UserID` = $userId
+                                AND `Name`='$name'");
         if ($result->num_rows > 0) {
           die("{\"response\": \"Class already exists in database\"}");
         }
@@ -34,8 +37,8 @@
 
         // Everything seems ok at this point, so just add the Class
         //In Reality we'd also validate the dates to make sure EndDate > StartDate
-        $result = $conn->query("INSERT INTO `Class` (Name, Title, CreditHours, ContactHours)
-                                VALUES('$name', '$title' , '$credithours' , '$contacthours')");
+        $result = $conn->query("INSERT INTO `Class` (Name, Title, CreditHours, ContactHours, UserID)
+                                VALUES('$name', '$title' , '$credithours' , '$contacthours', '$userId')");
     } else {
 	    $query = "UPDATE `Class`
 		            SET Name='$name', CreditHours='$credithours', ContactHours='$contacthours', Title='$title'

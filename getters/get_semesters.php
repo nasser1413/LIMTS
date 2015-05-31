@@ -6,18 +6,20 @@
 	$conn = new mysqli($GLOBALS["dbhost"], $GLOBALS["dbuser"], $GLOBALS["dbpass"], $GLOBALS["dbname"]);
 
 	// Check connection
-	if ($conn->connect_error) {
+	if ($conn->connect_error || !session_start()) {
 		die("Connection failed: " . $conn->connect_error);
 	}
 
+	$userId = $_SESSION[USER_ID];
     $id = $_GET["id"];
 
     $query = "SELECT *
-			  FROM  `Semester`";
+			  FROM  `Semester`
+			  WHERE `UserID` = $userId";
 
     if ($id) {
         $id = implode_parameters($id);
-        $query .= PHP_EOL . "WHERE `id` IN (" . $id . ")";
+        $query .= PHP_EOL . "AND `id` IN (" . $id . ")";
     }
 
 	$result = $conn->query($query);

@@ -6,20 +6,22 @@
 	$conn = new mysqli($GLOBALS["dbhost"], $GLOBALS["dbuser"], $GLOBALS["dbpass"], $GLOBALS["dbname"]);
 
 	// Check connection
-	if ($conn->connect_error) {
+	if ($conn->connect_error || !session_start()) {
 		die("Connection failed: " . $conn->connect_error);
 	}
 
+	$userId = $_SESSION[USER_ID];
     $building = $_GET["building"];
     $id = $_GET["id"];
 
 	$query = "SELECT *
-              FROM  `Room`";
+              FROM  `Room`
+			  WHERE `UserID` = $userId";
 
     if ($building) {
-        $query .= "WHERE `Building`=$building";
+        $query .= PHP_EOL . "AND `Building`=$building";
     } else if ($id) {
-        $query .= "WHERE `id`=$id";
+        $query .= PHP_EOL . "AND `id`=$id";
 	}
 
 	$result = $conn->query($query);
