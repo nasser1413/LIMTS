@@ -12,5 +12,6 @@
         {"name": "room", "title": "Room"}
     ]},
     {"name": "manage", "title": "Manage"},
+    {"name": "settings", "title": "Settings"},
     {"name": "about", "title": "About"}
 ]

@@ -14,6 +14,7 @@
 
 	// Get all of the "Parameters" (IRL don't forget to escape them to prevent SQLi!!!)
 	$class = $_GET["class"];
+	$tl_credits = $_GET["tl_credits"];
 	$credit_hours = $_GET["credit_hours"];
 	$database_id = $_GET["database_id"];
 	$identifier = $_GET["identifier"];
@@ -51,6 +52,10 @@
 		$max_capacity = "NULL";
 	}
 
+    if (!$tl_credits) {
+        $tl_credits = "NULL";
+    }
+
     if (!$credit_hours) {
         $credit_hours = "NULL";
     }
@@ -71,17 +76,17 @@
 		// Everything seems ok at this point, so just add the semester
 		//	In Reality, we should check all of these parameters against the database (but we don't have to worry a ton
 		//	because we'll get 'em from our *own* UI which should validate them for us)
-		$result = $conn->query("INSERT INTO `Section` (Identifier, Rooms, Semester, Class, Professor, MeetingTimes, MeetingType, MaxCapacity, CreditHours, UserID)
-					VALUES('$identifier', '$rooms', '$semester', '$class', '$professor', '$meeting_times', '$meeting_type', $max_capacity, $credit_hours, $userId)");
+		$result = $conn->query("INSERT INTO `Section` (Identifier, Rooms, Semester, Class, Professor, MeetingTimes, MeetingType, MaxCapacity, CreditHours, TeachingLoad, UserID)
+					VALUES('$identifier', '$rooms', '$semester', '$class', '$professor', '$meeting_times', '$meeting_type', $max_capacity, $credit_hours, $tl_credits, $userId)");
 	} else {
 		$query = "UPDATE `Section`
-					SET Identifier='$identifier', Rooms='$rooms', Semester='$semester', Class='$class', Professor='$professor', MeetingTimes='$meeting_times', MeetingType='$meeting_type', MaxCapacity='$max_capacity', CreditHours='$credit_hours'
+					SET Identifier='$identifier', Rooms='$rooms', Semester='$semester', Class='$class', Professor='$professor', MeetingTimes='$meeting_times', MeetingType='$meeting_type', MaxCapacity='$max_capacity', CreditHours='$credit_hours', TeachingLoad='$tl_credits'
 					WHERE id=$database_id";
 		$result = $conn->query($query);
 	}
 
 	if (!$result) {
-		die("{\"response\": \"Could not insert section!\"}");
+		die("{\"response\": \"Could not insert section! " . $conn->error . ".\"}");
 	}
 
 	echo "{\"response\": \"Success\"}";

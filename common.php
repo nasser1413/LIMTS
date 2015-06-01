@@ -222,6 +222,7 @@
 	class ValpoSection {
 		public $name;
 		public $credit_hours;
+		public $tl_credits;
 		public $title;
 		public $meeting_times;
 		public $rooms;
@@ -251,6 +252,18 @@
 			if (is_null($section->credit_hours)) {
 				// Grab them from the class instead
 				$section->credit_hours = $class[CLASS_CREDITHOURS];
+			}
+
+			// Load the number of credit hours from the row at first
+			$section->tl_credits = $db_row[SECTION_TLC];
+			// But if it is null
+			if (is_null($section->tl_credits)) {
+				// Grab them from the class instead
+				$section->tl_credits = $class[CLASS_CONTACTHOURS];
+				// If it is still null, the number of tlc = credithours
+				if (is_null($section->tl_credits)) {
+					$section->tl_credits = $section->credit_hours;
+				}
 			}
 
 			$section->rooms = array();

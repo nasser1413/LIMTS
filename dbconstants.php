@@ -46,6 +46,7 @@
     define("SECTION_TYPE", 7);
     define("SECTION_MCAP", 8);
     define("SECTION_CRHR", 9);
+    define("SECTION_TLC", 10);
 
     // Section Column information
     define("SECTION_DBID", 0);

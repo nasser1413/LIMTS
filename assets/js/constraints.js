@@ -46,7 +46,7 @@ function initConstraints(semesters) {
         var creditHours = 0;
 
         var ajax = ajaxLoadJSON("section", function(i, section) {
-            creditHours += parseInt(section.credit_hours);
+            creditHours += parseInt(section.tl_credits);
         }, {
             professor: id,
             semester: semesters

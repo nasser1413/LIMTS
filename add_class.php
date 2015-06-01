@@ -1,14 +1,14 @@
 <script type="text/javascript">
 var editId = getParameterByName("edit"),
     loadedClass;
-    
+
 function onFormSubmitted() {
     var name = $("#class-name").val();
     var title = $("#class-title").val();
     var crdh = $("#credit-hours").val();
     var conth = $("#contact-hours").val();
 
-    
+
     if (!name || !title || !crdh) {
         if (!name) {
             $("#class-name").parents(".form-group").addClass("has-error");
@@ -21,7 +21,7 @@ function onFormSubmitted() {
         if (!crdh) {
             $("#credit-hours").parents(".form-group").addClass("has-error");
         }
-        
+
         $("#warning-alert").offcanvas("show");
     } else {
         $.ajax({
@@ -54,12 +54,12 @@ $(function() {
             $("#class-name").val(classObj.name);
             $("#class-title").val(classObj.title);
             $("#credit-hours").val(classObj.credithours);
-            $("#contact-hours").val(classObj.contacthours);
+            $("#contact-hours").val(classObj.tl_credits);
         }, {
             id: editId
         });
     }
-    
+
     $("#class-name").change(function() {
         var parent = $("#class-name").parents(".form-group");
         parent.removeClass("has-error");
@@ -71,7 +71,7 @@ $(function() {
         parent.removeClass("has-error");
         parent.addClass("has-success");
     });
-    
+
     $("#credit-hours").change(function() {
         var parent = $("#credit-hours").parents(".form-group");
         parent.removeClass("has-error");
@@ -102,7 +102,7 @@ $(function() {
     </div>
 
     <div class="form-group">
-        <label for="contactHours1">Contact Hours:</label>
+        <label for="contactHours1">Teaching Load Credits:</label>
         <input type= "text" class="form-control" id="contact-hours" name="contactHours">
     </div>
 
@@ -111,4 +111,3 @@ $(function() {
     </div>
 
 </form>
-

@@ -57,6 +57,7 @@
             });
             SemestersFooter.mode = "checkboxes";
             SemestersFooter.jumpto = function(date) {
+                document.cookie = "semester=" + date.format();
                 $("#content").fullCalendar("gotoDate", date);
             };
         } else {

@@ -54,15 +54,38 @@ function updateCalendar(filters) {
     });
 }
 
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+
+    for(var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    
+    return null;
+}
+
 function getSemesterStart(done) {
     var filters = Filters.filters.semester;
+    var semester;
 
-    if (filters) {
+    if (semester = getCookie("semester")) {
+        done(moment(semester));
+    } else if (filters) {
         var minDate = Infinity;
 
         var response = ajaxLoadJSON("semester", function(i, semester) {
-            if (semester.start < minDate)
+            if (semester.start < minDate) {
                 minDate = semester.start;
+            }
         }, {
             id: filters
         });
@@ -119,7 +142,7 @@ function initTable(filters) {
 
                 for (var key in section) {
                     if (section.hasOwnProperty(key)) {
-                        if (key !== "database_id") {
+                        if (!(key == "database_id" || key == "meeting_type")) {
                             tableBuilder.addData(section[key], {
                                 "class": key
                             });

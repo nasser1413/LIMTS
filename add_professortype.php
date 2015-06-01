@@ -77,7 +77,7 @@ $(function() {
     </div>
 
     <div class="form-group">
-	    <label for="room-number">Default Credit Hours:</label>
+	    <label for="room-number">Default Max Teaching Load Credits:</label>
 	    <input type="number" class="form-control" id="credit-hours" name="credit-hours">
 	</div>
 

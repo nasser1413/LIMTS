@@ -37,7 +37,7 @@
             "id" => $row[CLASS_ID],
             "name" => $row[CLASS_NAME],
             "credithours" => $row[CLASS_CREDITHOURS],
-            "contacthours" => $row[CLASS_CONTACTHOURS],
+            "tl_credits" => $row[CLASS_CONTACTHOURS],
             "title" => $row[CLASS_TITLE]
         ));
 	}

@@ -5,7 +5,7 @@
     echo ",\"columns\":";
     $columns = array();
     foreach ($filtered_sections[0] as $key => $value) {
-        if ($key != database_id) {
+        if (!($key == "database_id" || $key == "meeting_type")) {
             array_push($columns, $key);
         }
     }

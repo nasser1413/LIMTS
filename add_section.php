@@ -1,6 +1,7 @@
         <script type="text/javascript">
             var modifiedCapacity = false,
                 modifiedCreditHours = false,
+                modifiedTeachingLoad = false,
                 meetingTimeRegex = /([A-Z]+) *(\d+:\d+[ap])-(\d+:\d+[ap])/,
                 rowId = 0,
                 rowTemplate,
@@ -18,14 +19,18 @@
                 if (modifiedCreditHours) {
                     section.credit_hours = $("#credit-hours").val();
                 }
-                
-                section.class = $("#class-selector option:selected").val();
-                section.professor = $("#professor-selector option:selected").val();
-                section.semester = $("#semester-selector option:selected").val();
+
+                if (modifiedTeachingLoad) {
+                    section.tl_credits = $("#contact-hours").val();
+                }
 
                 if (modifiedCapacity) {
                     section.max_capacity = $("#max-capacity").val();
                 }
+
+                section.class = $("#class-selector option:selected").val();
+                section.professor = $("#professor-selector option:selected").val();
+                section.semester = $("#semester-selector option:selected").val();
 
                 if (!$("#max-capacity").val()) {
                     $("#max-capacity").closest(".form-group").addClass("has-error");
@@ -176,16 +181,21 @@
             }
 
             function onClassSelected() {
-                if (modifiedCreditHours) {
-                    // Exit if the user has manually changed the crhr
-                    return;
-                }
-
                 var $selector = $(this),
                     $selected = $selector.find("option:selected");
 
                 ajaxLoadJSON("class", function(i, selectedClass) {
-                    $("#credit-hours").val(selectedClass.credithours);
+                    if (!modifiedTeachingLoad) {
+                        if (selectedClass.tl_credits !== null) {
+                            $("#contact-hours").val(selectedClass.tl_credits);
+                        } else {
+                            $("#contact-hours").val(selectedClass.credithours);
+                        }
+                    }
+
+                    if (!modifiedCreditHours) {
+                        $("#credit-hours").val(selectedClass.credithours);
+                    }
                 }, {
                     id: $selected.val()
                 });
@@ -237,6 +247,11 @@
                             $("#credit-hours").val(loadedSection.credit_hours);
                         }
 
+                        if (loadedSection.tl_credits != null) {
+                            modifiedTeachingLoad = true;
+                            $("#contact-hours").val(loadedSection.tl_credits);
+                        }
+
                         $.each(loadedSection.meeting_times, function(i, meetingTime) {
                             addRow(loadedSection.rooms[i], meetingTime);
                         });
@@ -260,6 +275,10 @@
 
                 $("#credit-hours").change(function() {
                     modifiedCreditHours = true;
+                });
+
+                $("#contact-hours").change(function() {
+                    modifiedTeachingLoad = true;
                 });
 
                 $('input[type="radio"]').click(function() {
@@ -328,6 +347,11 @@
             <div class="form-group">
                 <label for="max-capacity">Credit Hours:</label>
                 <input type="number" class="form-control" id="credit-hours" name="creditHours">
+                <p class="help-block"><i>If left blank this will be populated based on the selected class</i></p>
+            </div>
+            <div class="form-group">
+                <label for="contact-hours">Teaching Load Credits:</label>
+                <input type= "text" class="form-control" id="contact-hours" name="contactHours">
                 <p class="help-block"><i>If left blank this will be populated based on the selected class</i></p>
             </div>
             <div class="form-group">

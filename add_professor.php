@@ -132,8 +132,8 @@ $(function() {
 	</div>
 
     <div class="form-group">
-    <label for="max-credit-hours">Max Credit Hours:</label>
-    <input type="text" class="form-control" id="max-credit-hours" name="max-credit-hours">
+    <label for="max-credit-hours">Max Teaching Load Credits:</label>
+    <input type="number" class="form-control" id="max-credit-hours" name="max-credit-hours">
     <p class="help-block"><i>If left blank this will be populated based on the selected type</i></p>
     </div>
 
