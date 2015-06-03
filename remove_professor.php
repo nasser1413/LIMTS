@@ -1,6 +1,6 @@
 <?php
     // Import the "Grab Bag"
-    require("common.php");
+    require_once("common.php");
 
     // Open an (OO) MySQL Connection
     $conn = new mysqli($GLOBALS["dbhost"], $GLOBALS["dbuser"], $GLOBALS["dbpass"], $GLOBALS["dbname"]);

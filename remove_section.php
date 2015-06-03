@@ -1,6 +1,6 @@
 <?php
     // Import the "Grab Bag"
-    require("common.php");
+    require_once("common.php");
 
     // Open an (OO) MySQL Connection
     $conn = new mysqli($GLOBALS["dbhost"], $GLOBALS["dbuser"], $GLOBALS["dbpass"], $GLOBALS["dbname"]);
@@ -26,19 +26,19 @@
     if ($result->num_rows > 0) {
  		$result->close();
 
-	// ready to delete 
+	// ready to delete
 		$result = $conn->query("DELETE FROM `Section`
                             WHERE `id`='$id'");
 
 	  if (!$result) {
       die("{\"response\": \"Could not remove the Section!\"}");
     }
-    
+
     }
 	else{
  die("{\"response\": \"Section does not exists in database\"}");
 }
-   	
+
 
 
   // Give a success response
