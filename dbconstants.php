@@ -9,7 +9,7 @@
     $dbhost = "localhost";
     $dbuser = "scheduler";
     $dbpass = "358dbpass";
-    $dbname = "test";
+    $dbname = "scheduler";
 
     // Day abbreviations as given by the Registrar
     $day_abbreviations = array(

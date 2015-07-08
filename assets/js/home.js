@@ -69,7 +69,7 @@ function getCookie(cname) {
             return c.substring(name.length, c.length);
         }
     }
-    
+
     return null;
 }
 
@@ -77,7 +77,7 @@ function getSemesterStart(done) {
     var filters = Filters.filters.semester;
     var semester;
 
-    if (semester = getCookie("semester")) {
+    if ((semester = getCookie("semester")) && (semester != "Invalid date")) {
         done(moment(semester));
     } else if (filters) {
         var minDate = Infinity;

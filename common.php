@@ -54,24 +54,41 @@
 	}
 
 	// Parse meeting times into a more appropriate format
-	function parse_meeting_times($meeting_times) {
+	function parse_meeting_times($section, $rooms, $buildings) {
+		$meeting_times = $section->meeting_times;
 		$parsed_times = array();
-		foreach ($meeting_times as $meeting_time) {
-			preg_match($GLOBALS["date_regex"], $meeting_time, $matches);
+		
+		for ($i = 0; $i < count($meeting_times); $i++) {
+			$room_id = $section->room_ids[$i];
+
+			if ($rooms && !in_array($room_id, $rooms)) {
+				continue;
+			}
+
+			if ($buildings) {
+				$room = get_x_with_id($conn, "Room", $room_id);
+
+				if (!in_array($room[ROOM_BLDG], $buildings)) {
+					continue;
+				}
+			}
+
+			preg_match($GLOBALS["date_regex"], $meeting_times[$i], $matches);
 			$days = $matches[1];
 			$start = strtotime($matches[2] . "m", 0);
 			$end = strtotime($matches[3] . "m", 0);
 			$range = array($start, $end);
 
-			for ($i = 0; $i < strlen($days); $i++) {
-				$parsed_times[$GLOBALS["day_abbreviations"][$days{$i}]] = $range;
+			for ($j = 0; $j < strlen($days); $j++) {
+				$parsed_times[$GLOBALS["day_abbreviations"][$days{$j}]] = $range;
 			}
 		}
+
 		return $parsed_times;
 	}
 
 	/************************************************************
-	*   Utility Functions						                *
+	*   Utility Functions						                						*
 	************************************************************/
 
 	// Replace the first occurence of something
@@ -225,6 +242,7 @@
 		public $tl_credits;
 		public $title;
 		public $meeting_times;
+		public $room_ids;
 		public $rooms;
 		public $semester;
 		public $meeting_type;
@@ -268,8 +286,8 @@
 
 			$section->rooms = array();
 			$smallest_cap = PHP_INT_MAX;
-			$room_ids = json_decode($db_row[SECTION_ROOMS]);
-			foreach ($room_ids as $room_id) {
+			$section->room_ids = json_decode($db_row[SECTION_ROOMS]);
+			foreach ($section->room_ids as $room_id) {
 				$room = get_x_with_id($conn, "Room", $room_id);
 				$building = get_x_with_id($conn, "Building", $room[ROOM_BLDG]);
 

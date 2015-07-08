@@ -28,7 +28,7 @@
         continue;
       }
       // Grab the relevant section information
-      $meeting_times = parse_meeting_times($section->meeting_times);
+      $meeting_times = parse_meeting_times($section, $rooms, $buildings);
       $name = $section->name;
       // Loop through the time range
       for ($time = $semester["start"]; ($time <= $end) && ($time <= $semester["end"]); $time = strtotime("+1 day", $time)) {
