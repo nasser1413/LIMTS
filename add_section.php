@@ -204,16 +204,23 @@
             $(function() {
                 rowTemplate = $("#row-template").html();
 
-                loadSelector("semester", undefined, {
-                    multiselect: false
-                });
-                loadSelector("professor", undefined, {
-                    multiselect: false
-                });
-                loadSelector("class", undefined, {
+                ajaxs = [];
+
+                ajaxs.push(loadSelector("semester", undefined, {
                     multiselect: false,
-                    done: (editId ? undefined : onClassSelected)
-                });
+                    precheck: false
+                }));
+
+                ajaxs.push(loadSelector("professor", undefined, {
+                    multiselect: false,
+                    precheck: false
+                }));
+
+                ajaxs.push(loadSelector("class", undefined, {
+                    multiselect: false,
+                    done: (editId ? undefined : onClassSelected),
+                    precheck: false
+                }));
 
                 if (editId) {
                     $("#form-header").text("Edit Section");
@@ -223,17 +230,19 @@
                         var splitName = loadedSection.name.split("-");
                         var className = splitName[0] + "-" + splitName[1];
 
-                        $("#professor-selector option").filter(function() {
-                            return $(this).html() === loadedSection.professor;
-                        }).prop("selected", true);
+                        $.when.apply($, ajaxs).then(function() {
+                          $("#professor-selector option").filter(function() {
+                              return $(this).html() === loadedSection.professor;
+                          }).prop("selected", true);
 
-                        $("#semester-selector option").filter(function() {
-                            return $(this).html() === loadedSection.semester;
-                        }).prop("selected", true);
+                          $("#semester-selector option").filter(function() {
+                              return $(this).html() === loadedSection.semester;
+                          }).prop("selected", true);
 
-                        $("#class-selector option").filter(function() {
-                            return $(this).html() === className;
-                        }).prop("selected", true);
+                          $("#class-selector option").filter(function() {
+                              return $(this).html() === className;
+                          }).prop("selected", true);
+                        });
 
                         $("#identifier").val(splitName[2]);
 

@@ -29,7 +29,6 @@
       }
       // Grab the relevant section information
       $meeting_times = parse_meeting_times($section, $rooms, $buildings);
-      $name = $section->name;
       // Loop through the time range
       for ($time = $semester["start"]; ($time <= $end) && ($time <= $semester["end"]); $time = strtotime("+1 day", $time)) {
         // Get the day of the week (numbered 1-7)
@@ -38,8 +37,10 @@
         if ($meeting_times[$day] != NULL) {
           // Generate an event w/ the appropriate information
           $event = array();
-          $event["title"] = $name;
+          $event["title"] = $section->name;
           $event["id"] = $section->database_id;
+          $event["location"] = $section->rooms[$meeting_times[$day][2]];
+          $event["description"] = $section->title;
           $event["allDay"] = false;
           $event["start"] = date(DATE_ATOM, strtotime("-1 day", $time + $meeting_times[$day][0]));
           $event["end"] = date(DATE_ATOM, strtotime("-1 day", $time + $meeting_times[$day][1]));

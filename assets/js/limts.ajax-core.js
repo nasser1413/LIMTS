@@ -1,12 +1,15 @@
 function loadSelector(type, handler, opts) {
+  // Pluralize the URL
+  var url = "getters/get_" + pluralize(type) + ".php";
    // These are the default options
    var options = {
        multiselect: true,
        addBlank: false,
+       precheck: true,
        inheritClass: true,
        disableIfEmpty: true,
        undisable: true,
-       done: function() { },
+       done: undefined,
        offset: ""
    };
 
@@ -14,10 +17,8 @@ function loadSelector(type, handler, opts) {
    $.each((opts || {}), function(key, value) {
        options[key] = value;
    });
-
-   // Pluralize the URL
-   var url = "getters/get_" + pluralize(type) + ".php";
-   $.ajax({
+   
+   return $.ajax({
         dataType: "json",
         url: url,
         success: function(data) {
@@ -26,7 +27,7 @@ function loadSelector(type, handler, opts) {
             $.each(data, function(i, object) {
                 var id = object.id,
                     abbr = object.name ? object.name : object.abbr,
-                    checked = $.inArray(id, filters[type]) !== -1;
+                    checked = ($.inArray(id, filters[type]) !== -1) && options.precheck;
 
                 selector.append(
                     $("<option>", { "value" : id, "internal-type" : type })
@@ -58,7 +59,9 @@ function loadSelector(type, handler, opts) {
                 selector.change(handler);
             }
 
-            options.done.apply(selector);
+            if (options.done) {
+              options.done.apply(selector);
+            }
         }
     });
 }

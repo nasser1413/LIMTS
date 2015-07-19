@@ -57,7 +57,7 @@
 	function parse_meeting_times($section, $rooms, $buildings) {
 		$meeting_times = $section->meeting_times;
 		$parsed_times = array();
-		
+
 		for ($i = 0; $i < count($meeting_times); $i++) {
 			$room_id = $section->room_ids[$i];
 
@@ -68,7 +68,7 @@
 			if ($buildings) {
 				$room = get_x_with_id($conn, "Room", $room_id);
 
-				if (!in_array($room[ROOM_BLDG], $buildings)) {
+				if(!in_array($room[ROOM_BLDG], $buildings)) {
 					continue;
 				}
 			}
@@ -77,7 +77,7 @@
 			$days = $matches[1];
 			$start = strtotime($matches[2] . "m", 0);
 			$end = strtotime($matches[3] . "m", 0);
-			$range = array($start, $end);
+			$range = array($start, $end, $i);
 
 			for ($j = 0; $j < strlen($days); $j++) {
 				$parsed_times[$GLOBALS["day_abbreviations"][$days{$j}]] = $range;
@@ -111,15 +111,15 @@
 		return true;
 	}
 
-    function json_to_sql($json) {
-        $parameter = json_decode($json);
+  function json_to_sql($json) {
+    $parameter = json_decode($json);
 
-        if (is_array($parameter)) {
-            return implode(",", $parameter);
-        } else {
-            return $parameter;
-        }
+    if (is_array($parameter)) {
+      return implode(",", $parameter);
+    } else {
+      return $parameter;
     }
+  }
 
 	function implode_parameters($parameter) {
 		if (is_array($parameter)) {
@@ -160,6 +160,37 @@
 	function is_user_logged_in()
 	{
 		return isset($_SESSION[SESSION_VALID]) && $_SESSION[SESSION_VALID];
+	}
+
+	function update_user_info($conn, $username, $firstname, $lastname) {
+		$query	 		= "UPDATE `Users`
+	               	 SET `Username`='$username', `FirstName`='$firstname', `LastName`='$lastname'
+	               	 WHERE `Username`='$username';";
+		$user_data	= array(
+			"Username" => $username,
+			"FirstName" => $firstname,
+			"LastName" => $lastname
+		);
+ 		if ($conn->query($query)) {
+			validate_user($user_data);
+ 			return "Successful";
+ 		} else {
+ 			return "Could not update user's information, " . $conn->error;
+ 		}
+	}
+
+	function change_user_password($conn, $username, $new_password) {
+		$hash 	= hash("sha256", $new_password);
+		$salt 	= create_salt();
+		$hash		= hash("sha256", $salt . $hash);
+		$query	= "UPDATE `Users`
+               SET `Password`='$hash', `Salt`='$salt'
+               WHERE `Username`='$username';";
+		if ($conn->query($query)) {
+			return "Successful";
+		} else {
+			return "Could not update user's password, " . $conn->error;
+		}
 	}
 
 	// logs a user in, returns an error string if unsuccessful
