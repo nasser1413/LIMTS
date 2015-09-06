@@ -1,8 +1,30 @@
 <script type="text/javascript">
-    var type = getParameterByName("type");
+    var type = getParameterByName("type"),
+        manageables = {
+          "section":"Section",
+          "class":"Class",
+          "professor":"Professor",
+          "professortype":"Professor Type",
+          "semester":"Semester",
+          "building":"Building",
+          "room":"Room"
+        };
 
     $(function() {
         var keys = [];
+        var $managementMenu = $("#management-dropdown");
+
+        $.each(manageables, function (key, obj) {
+          $managementMenu.append(
+            $("<li>").attr("role", "presentation").append(
+              $("<a>")
+                .attr("role", "menuitem")
+                .attr("tabindex", "-1")
+                .attr("href", "?page=manage&type="+key+location.hash)
+                .text(obj)
+            )
+          );
+        });
 
         var response = ajaxLoadJSON(type, function(i, obj) {
             var id = (obj.id || obj.database_id),
@@ -29,7 +51,7 @@
                     $("<a>").append(
                         $("<span>")
                             .addClass("glyphicon glyphicon-edit")
-                    ).attr("href", "?page=add-"+type+"&edit="+id)
+                    ).attr("href", "?page=add-"+type+"&edit="+id+location.hash)
                 )
             );
 
@@ -38,7 +60,7 @@
                     $("<a>").append(
                         $("<span>")
                             .addClass("glyphicon glyphicon-remove")
-                    ).attr("href", "?page=remove-"+type+"&id="+id)
+                    ).attr("href", "?page=remove-"+type+"&id="+id+location.hash)
                 )
             );
 
@@ -88,14 +110,8 @@
                 Manage <span class="caret"></span>
             </button>
 
-            <ul class="dropdown-menu" role="menu" aria-labelledby="management-menu" style="width: 100%">
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="?page=manage&type=section">Section</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="?page=manage&type=class">Class</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="?page=manage&type=professor">Professor</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="?page=manage&type=professortype">Professor Type</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="?page=manage&type=semester">Semester</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="?page=manage&type=building">Building</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="?page=manage&type=room">Room</a></li>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="management-menu" style="width: 100%" id="management-dropdown">
+
             </ul>
         </div>
 
