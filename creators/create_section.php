@@ -27,19 +27,19 @@
 
     switch($meeting_type) {
         case SECTION_TYPE_TBA:
-            $meeting_times = "[\"TBA\"]";
+          $meeting_times = "[\"TBA\"]";
 	        $rooms = "[0]";
-            break;
+          break;
         case SECTION_TYPE_ONLINE:
-            $meeting_times = "[\"ONLINE\"]";
+          $meeting_times = "[\"ONLINE\"]";
 	        $rooms = "[0]";
-            break;
+          break;
         case SECTION_TYPE_ODD:
         case SECTION_TYPE_EVEN:
-            break;
+          break;
         default:
-            $meeting_type = SECTION_TYPE_NORMAL;
-            break;
+          $meeting_type = SECTION_TYPE_NORMAL;
+          break;
     }
 
 	// Check to make sure the required information is present
@@ -47,27 +47,27 @@
 		die("{\"response\": \"You must specify the section id, rooms, semester, class, professor and meeting times.\"}");
 	}
 
-	// and for max_capacity
-	if (!$max_capacity) {
-		$max_capacity = "NULL";
-	}
+  // and for max_capacity
+  if (is_null($max_capacity)) {
+  	$max_capacity = "NULL";
+  }
 
-    if (!$tl_credits) {
-        $tl_credits = "NULL";
-    }
+  if (is_null($tl_credits)) {
+    $tl_credits = "NULL";
+  }
 
-    if (!$credit_hours) {
-        $credit_hours = "NULL";
-    }
+  if (is_null($credit_hours)) {
+    $credit_hours = "NULL";
+  }
 
 	// Check to see if the section already exists in the database
 	if (!$database_id) {
 		$result = $conn->query("SELECT *
-					FROM `Section`
-                    WHERE `UserID` = $userId
-					AND `Identifier`='$identifier'
-					AND `Class`='$class'
-                    AND `Semester`='$semester'");
+                            FROM `Section`
+                            WHERE `UserID` = $userId
+                            AND `Identifier`='$identifier'
+                            AND `Class`='$class'
+                            AND `Semester`='$semester'");
 		if ($result->num_rows > 0) {
 			die("{\"response\": \"Section already exists in database\"}");
 		}
@@ -77,11 +77,11 @@
 		//	In Reality, we should check all of these parameters against the database (but we don't have to worry a ton
 		//	because we'll get 'em from our *own* UI which should validate them for us)
 		$result = $conn->query("INSERT INTO `Section` (Identifier, Rooms, Semester, Class, Professor, MeetingTimes, MeetingType, MaxCapacity, CreditHours, TeachingLoad, UserID)
-					VALUES('$identifier', '$rooms', '$semester', '$class', '$professor', '$meeting_times', '$meeting_type', $max_capacity, $credit_hours, $tl_credits, $userId)");
+                            VALUES('$identifier', '$rooms', '$semester', '$class', '$professor', '$meeting_times', '$meeting_type', $max_capacity, $credit_hours, $tl_credits, $userId)");
 	} else {
 		$query = "UPDATE `Section`
-					SET Identifier='$identifier', Rooms='$rooms', Semester='$semester', Class='$class', Professor='$professor', MeetingTimes='$meeting_times', MeetingType='$meeting_type', MaxCapacity='$max_capacity', CreditHours='$credit_hours', TeachingLoad='$tl_credits'
-					WHERE id=$database_id";
+              SET Identifier='$identifier', Rooms='$rooms', Semester='$semester', Class='$class', Professor='$professor', MeetingTimes='$meeting_times', MeetingType='$meeting_type', MaxCapacity='$max_capacity', CreditHours='$credit_hours', TeachingLoad='$tl_credits'
+              WHERE id=$database_id";
 		$result = $conn->query($query);
 	}
 
