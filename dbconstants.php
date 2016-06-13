@@ -7,8 +7,8 @@
 
     // Connection information (host, uname, pwd)
     $dbhost = "localhost";
-    $dbuser = "scheduler";
-    $dbpass = "358dbpass";
+    $dbuser = "root";
+    $dbpass = "";
     $dbname = "scheduler";
 
     // Day abbreviations as given by the Registrar
